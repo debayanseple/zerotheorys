@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const words = "We build digital products that feel inevitable — engineered with precision, designed with restraint, shipped with intent.".split(" ");
+const words = "We replace three vendors with one accountable partner — engineering AI, software, growth and 24/7 operations into a single team that owns the outcome.".split(" ");
 
 export default function Manifesto() {
   return (

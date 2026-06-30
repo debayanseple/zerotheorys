@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-team.jpg";
 
 const stats = [
-  { value: "40+", label: "Projects Shipped" },
-  { value: "12", label: "Countries Reached" },
-  { value: "99%", label: "Client Retention" },
-  { value: "∞", label: "Ideas Executed" },
+  { value: "99.98%", label: "Uptime · 90d" },
+  { value: "6–10w", label: "Pilot to prod" },
+  { value: "4.8/5", label: "CSAT · 12mo" },
+  { value: "24/7", label: "Global ops" },
 ];
 
 export default function Hero() {
@@ -23,20 +23,20 @@ export default function Hero() {
           >
             <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-muted-foreground">
               <span className="size-1.5 rounded-full bg-neon-blue animate-pulse" />
-              Software engineering · Growth marketing
+              AI · Engineering · Growth · 24/7 Ops
             </span>
 
             <h1
               className="mt-6 font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]"
               style={{ textShadow: "0 4px 16px rgba(0,0,0,0.6)" }}
             >
-              Code that ships.
+              Replace three vendors.
               <br />
               <span
                 className="text-gradient"
                 style={{ textShadow: "0 0 20px rgba(168,85,247,0.6)" }}
               >
-                Campaigns that scale.
+                Ship with one partner.
               </span>
             </h1>
 
@@ -44,8 +44,9 @@ export default function Hero() {
               className="mt-6 max-w-lg text-lg text-foreground/90 leading-relaxed"
               style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}
             >
-              Zero Theorys pairs senior software engineers with performance
-              marketers — we build the product and the pipeline that grows it.
+              Zero Theorys integrates AI, software engineering, performance
+              marketing, and 24/7 operations into a single accountable team for
+              ambitious companies.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
