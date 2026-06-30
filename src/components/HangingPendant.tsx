@@ -87,19 +87,19 @@ export default function HangingPendant() {
               "linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1))",
           }}
         />
-        {/* small pendant image */}
+        {/* pendant image */}
         <img
           src={pendant}
           alt=""
           draggable={false}
           className="block select-none"
           style={{
-            width: hovered ? 56 : 40,
+            width: hovered ? 120 : 100,
             height: "auto",
             marginTop: -2,
             filter: hovered
-              ? "drop-shadow(0 12px 24px rgba(168,85,247,0.5))"
-              : "drop-shadow(0 8px 16px rgba(0,0,0,0.45))",
+              ? "drop-shadow(0 16px 32px rgba(168,85,247,0.5))"
+              : "drop-shadow(0 12px 24px rgba(0,0,0,0.45))",
             transition: "width 0.3s ease, filter 0.3s ease",
           }}
         />
