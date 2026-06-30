@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import heroImage from "@/assets/hero-design.svg";
 
 const stats = [
@@ -9,12 +10,55 @@ const stats = [
 ];
 
 export default function Hero() {
+  const [visible, setVisible] = useState(true);
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      setVisible(rect.bottom > 80);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section className="relative min-h-screen w-full overflow-hidden">
+    <section ref={heroRef} className="relative min-h-screen w-full overflow-hidden">
       <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-radial)" }} />
 
+      {/* Floating hero image — top-right, small, hover-reactive, hides on scroll */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : -20 }}
+        transition={{ duration: 0.4 }}
+        className="fixed top-20 right-6 z-30 pointer-events-auto hidden md:block"
+      >
+        <div className="group relative cursor-pointer">
+          <img
+            src={heroImage}
+            alt="Zero Theorys hero illustration"
+            draggable={false}
+            className="w-20 h-auto object-contain mix-blend-screen select-none transition-transform duration-300 ease-out group-hover:scale-110"
+            style={{
+              filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.5))",
+            }}
+            width={200}
+            height={150}
+          />
+          <div
+            className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-70"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 50%, oklch(0.68 0.27 300 / 0.5), transparent 70%)",
+            }}
+          />
+        </div>
+      </motion.div>
+
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-16 md:pt-40 lg:pt-48">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 gap-12 items-center">
           {/* Left column — text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -63,33 +107,6 @@ export default function Hero() {
                 See growth case studies →
               </a>
             </div>
-          </motion.div>
-
-          {/* Right column — image merged into background, no card */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-            className="relative"
-          >
-            <img
-              src={heroImage}
-              alt="Zero Theorys hero illustration"
-              className="w-full h-auto object-contain mix-blend-screen"
-              style={{
-                filter: "drop-shadow(0 30px 60px rgba(0,0,0,0.5))",
-              }}
-              width={1200}
-              height={800}
-            />
-            {/* subtle glow behind image */}
-            <div
-              className="absolute -inset-4 -z-10 rounded-3xl opacity-50 blur-3xl"
-              style={{
-                background:
-                  "radial-gradient(circle at 50% 50%, oklch(0.68 0.27 300 / 0.35), transparent 70%)",
-              }}
-            />
           </motion.div>
 
         </div>
