@@ -1,29 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import Services from "@/components/Services";
+import Manifesto from "@/components/Manifesto";
+import Stats from "@/components/Stats";
+import CTA from "@/components/CTA";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Zero Theorys — Engineering the improbable" },
+      { name: "description", content: "Zero Theorys is a creative engineering studio crafting software, web, brand and growth systems for ambitious teams." },
+      { property: "og:title", content: "Zero Theorys — Engineering the improbable" },
+      { property: "og:description", content: "Software, web, social and graphic design for ambitious teams." },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="relative">
+      <Navbar />
+      <Hero />
+      <Services />
+      <Manifesto />
+      <Stats />
+      <CTA />
+    </main>
   );
 }
