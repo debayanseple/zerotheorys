@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import heroImage from "@/assets/hero-team.jpg";
+import heroImage from "@/assets/hero-design.svg";
 
 const stats = [
   { value: "99.98%", label: "Uptime · 90d" },
@@ -30,13 +30,13 @@ export default function Hero() {
               className="mt-6 font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]"
               style={{ textShadow: "0 4px 16px rgba(0,0,0,0.6)" }}
             >
-              Replace three vendors.
+              Software, AI and growth.
               <br />
               <span
                 className="text-gradient"
                 style={{ textShadow: "0 0 20px rgba(168,85,247,0.6)" }}
               >
-                Ship with one partner.
+                Engineered as one.
               </span>
             </h1>
 
@@ -75,7 +75,7 @@ export default function Hero() {
             <div className="relative rounded-2xl overflow-hidden glass shadow-card">
               <img
                 src={heroImage}
-                alt="Zero Theorys team collaborating on software and marketing projects"
+                alt="Zero Theorys hero illustration"
                 className="w-full h-auto object-cover"
                 width={1200}
                 height={800}
