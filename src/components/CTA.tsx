@@ -9,17 +9,19 @@ export default function CTA() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="max-w-4xl mx-auto text-center"
+        className="max-w-4xl mx-auto"
       >
-        <h2 className="font-display text-5xl md:text-7xl font-semibold tracking-tight">
-          Let's build the<br /><span className="text-gradient">next thing.</span>
-        </h2>
-        <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
-          We take on a handful of partners each quarter. Tell us what you're building.
-        </p>
-        <a href="mailto:hello@zerotheorys.com" className="mt-10 inline-flex items-center gap-2 rounded-full px-8 py-4 bg-foreground text-background font-medium hover:opacity-90 transition">
-          hello@zerotheorys.com →
-        </a>
+        <div className="glass rounded-3xl p-10 md:p-16 text-center">
+          <h2 className="font-display text-5xl md:text-7xl font-semibold tracking-tight">
+            Let's build the<br /><span className="text-gradient">next thing.</span>
+          </h2>
+          <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
+            We take on a handful of partners each quarter. Tell us what you're building.
+          </p>
+          <a href="mailto:hello@zerotheorys.com" className="mt-10 inline-flex items-center gap-2 rounded-full px-8 py-4 bg-foreground text-background font-medium hover:opacity-90 transition">
+            hello@zerotheorys.com →
+          </a>
+        </div>
       </motion.div>
 
       <footer className="mt-32 max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4 text-sm text-muted-foreground">
