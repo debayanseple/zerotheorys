@@ -18,7 +18,7 @@ export default function Stats() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.08 }}
-            className="p-8 md:p-12 bg-background/40"
+            className="p-8 md:p-12 glass"
           >
             <div className="font-display text-4xl md:text-6xl font-semibold text-gradient">{s.v}</div>
             <div className="mt-2 text-sm text-muted-foreground tracking-wide">{s.l}</div>
