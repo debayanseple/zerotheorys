@@ -58,7 +58,7 @@ export default function Hero() {
       </motion.div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-16 md:pt-40 lg:pt-48">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 gap-12 items-center">
           {/* Left column — text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
