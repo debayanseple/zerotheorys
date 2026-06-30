@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import CountUp from "@/components/CountUp";
 
 const stats = [
   { v: "99.98%", l: "Uptime · trailing 90 days" },
@@ -32,7 +33,7 @@ export default function Stats() {
               className="glass rounded-3xl p-8 md:p-10"
             >
               <div className="font-display text-3xl md:text-5xl font-semibold text-gradient">
-                {s.v}
+                <CountUp value={s.v} />
               </div>
               <div className="mt-3 text-xs md:text-sm text-muted-foreground tracking-wide">
                 {s.l}
