@@ -22,10 +22,10 @@ export default function HangingPendant() {
       const pivotY = rect.top;
       const dx = e.clientX - pivotX;
       const dy = Math.max(e.clientY - pivotY, 1);
-      // Angle in degrees from vertical (down) axis
+      // Angle in degrees from vertical (down) axis — follow the cursor
       const deg = Math.atan2(dx, dy) * (180 / Math.PI);
-      // Clamp swing
-      target.current = Math.max(-35, Math.min(35, deg * 0.6));
+      // Clamp swing (negate so the pendant leans toward the cursor)
+      target.current = Math.max(-45, Math.min(45, -deg * 0.7));
     };
     window.addEventListener("mousemove", handleMove);
     return () => window.removeEventListener("mousemove", handleMove);
