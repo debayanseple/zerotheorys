@@ -8,6 +8,8 @@ import Manifesto from "@/components/Manifesto";
 import Stats from "@/components/Stats";
 import Security from "@/components/Security";
 import CTA from "@/components/CTA";
+import HangingPendant from "@/components/HangingPendant";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -25,6 +27,8 @@ function Index() {
   return (
     <main className="relative">
       <Navbar />
+      <HangingPendant />
+
       <Hero />
       <Services />
       <Process />
