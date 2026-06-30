@@ -36,7 +36,7 @@ export default function CTA() {
               {[
                 { icon: Mail, label: "Email", value: "hello.zerotheorys@gmail.com" },
                 { icon: Phone, label: "Phone", value: "+91 8001316145" },
-                { icon: MapPin, label: "Studio", value: "10B Bright Street, Kolkata 700019, India" },
+                { icon: MapPin, label: "Studio", value: "Anandapolly, Bapuji Nagar, Jadavpur, Near Sulekha, India" },
                 { icon: Clock, label: "Hours", value: "Mon–Sat · 09:00–19:00 IST" },
               ].map((c) => (
                 <div key={c.label} className="glass rounded-2xl p-5">
