@@ -24,7 +24,7 @@ export default function Hero() {
             Code that ships.<br />
             <span className="text-gradient" style={{ textShadow: '0 0 20px rgba(168,85,247,0.6)' }}>Campaigns that scale.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+          <p className="mt-6 max-w-xl text-lg text-foreground/90" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
             Zero Theorys pairs senior software engineers with performance marketers — we build the product and the pipeline that grows it.
           </p>
           <div className="mt-8 flex flex-wrap gap-3 pointer-events-auto">
