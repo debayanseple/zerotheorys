@@ -1,24 +1,50 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
-import ServiceIcon from "./three/ServiceIcon";
+import { motion } from "framer-motion";
+import { Sparkles, Bot, Code2, Globe, TrendingUp, Headphones } from "lucide-react";
 
 const services = [
-  { kind: "software" as const, title: "Software Engineering", desc: "Production-grade systems, APIs and infrastructure built with modern stacks and an obsession for craft.", tag: "01 / Systems" },
-  { kind: "web" as const, title: "Web Development", desc: "Interactive, performant websites and product UIs. From marketing surfaces to complex SaaS.", tag: "02 / Interfaces" },
-  { kind: "social" as const, title: "Social Media Marketing", desc: "Content systems, paid growth and community engineering that compound your brand's gravity.", tag: "03 / Growth" },
-  { kind: "design" as const, title: "Graphic Design", desc: "Identity, motion, art direction. Visual languages that make brands feel inevitable.", tag: "04 / Identity" },
+  {
+    icon: Sparkles,
+    title: "AI Solutions",
+    desc: "Production-grade AI products, copilots, and automation integrated into your existing stack.",
+    tag: "01 / Intelligence",
+  },
+  {
+    icon: Bot,
+    title: "AI Agents & Automation",
+    desc: "Autonomous and human-in-the-loop workflows that compound output across every team.",
+    tag: "02 / Autonomy",
+  },
+  {
+    icon: Code2,
+    title: "Software Development",
+    desc: "Custom software, SaaS platforms, and internal tools shipped by senior engineers.",
+    tag: "03 / Systems",
+  },
+  {
+    icon: Globe,
+    title: "Website Development",
+    desc: "High-performance, conversion-focused websites optimized for speed, SEO, and revenue.",
+    tag: "04 / Surfaces",
+  },
+  {
+    icon: TrendingUp,
+    title: "Digital Marketing",
+    desc: "Full-funnel strategies — SEO, paid, content, lifecycle — that turn audiences into revenue.",
+    tag: "05 / Growth",
+  },
+  {
+    icon: Headphones,
+    title: "BPO & Outsourcing",
+    desc: "24/7 customer support, back-office, and process operations across Kolkata, London & NYC.",
+    tag: "06 / Operations",
+  },
 ];
 
 export default function Services() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
-  const [hovered, setHovered] = useState<number | null>(null);
-
   return (
-    <section id="services" ref={ref} className="relative h-[400vh]">
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center">
-        <div className="max-w-6xl mx-auto px-6 w-full mb-12">
+    <section id="services" className="relative py-32 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="max-w-3xl mb-16">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -32,34 +58,50 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="mt-3 font-display text-4xl md:text-6xl font-semibold tracking-tight"
+            className="mt-4 font-display text-4xl md:text-6xl font-semibold tracking-tight"
           >
-            Four disciplines.<br />
-            <span className="text-gradient">One studio.</span>
+            Six disciplines.<br />
+            <span className="text-gradient">One accountable partner.</span>
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="mt-6 text-lg text-muted-foreground max-w-xl"
+          >
+            Replace three vendors with one studio that owns the strategy, the
+            build, the growth, and the round-the-clock operations.
+          </motion.p>
         </div>
 
-        <motion.div style={{ x }} className="flex gap-8 pl-[8vw]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((s, i) => (
-            <div
-              key={s.kind}
-              onMouseEnter={() => setHovered(i)}
-              onMouseLeave={() => setHovered(null)}
-              className="group relative glass rounded-3xl w-[72vw] md:w-[42vw] lg:w-[34vw] aspect-[4/5] p-8 flex flex-col shrink-0 transition-shadow duration-500 hover:glow-ring"
+            <motion.div
+              key={s.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: i * 0.06, duration: 0.6 }}
+              className="glass glass-hover rounded-3xl p-8 flex flex-col"
             >
-              <div className="flex justify-between text-xs text-muted-foreground tracking-widest uppercase">
-                <span>{s.tag}</span>
-                <span>↗</span>
+              <div className="flex justify-between items-start">
+                <div className="size-12 rounded-2xl glass flex items-center justify-center">
+                  <s.icon className="size-5 text-foreground" strokeWidth={1.5} />
+                </div>
+                <span className="text-[10px] tracking-widest uppercase text-muted-foreground">
+                  {s.tag}
+                </span>
               </div>
-              <div className="flex-1 my-6">
-                <ServiceIcon kind={s.kind} hovered={hovered === i} />
-              </div>
-              <h3 className="font-display text-2xl md:text-3xl font-semibold tracking-tight">{s.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-            </div>
+              <h3 className="mt-8 font-display text-2xl font-semibold tracking-tight">
+                {s.title}
+              </h3>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                {s.desc}
+              </p>
+            </motion.div>
           ))}
-          <div className="shrink-0 w-[20vw]" />
-        </motion.div>
+        </div>
       </div>
     </section>
   );

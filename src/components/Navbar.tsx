@@ -13,10 +13,11 @@ export default function Navbar() {
           <span className="size-2 rounded-full bg-gradient-to-br from-neon-blue to-neon-purple shadow-[0_0_12px_var(--neon-purple)]" />
           Zero Theorys
         </a>
-        <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+        <div className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
           <a href="#services" className="hover:text-foreground transition">Services</a>
+          <a href="#process" className="hover:text-foreground transition">Process</a>
           <a href="#work" className="hover:text-foreground transition">Work</a>
-          <a href="#about" className="hover:text-foreground transition">About</a>
+          <a href="#security" className="hover:text-foreground transition">Security</a>
           <a href="#contact" className="hover:text-foreground transition">Contact</a>
         </div>
         <a href="#contact" className="text-sm rounded-full px-4 py-2 bg-foreground text-background font-medium hover:opacity-90 transition">
