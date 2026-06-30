@@ -53,11 +53,10 @@ export default function HangingPendant() {
       aria-hidden
       className="pointer-events-none fixed z-40 hidden lg:block"
       style={{
-        // Anchored to the right of the navbar, near the Start project button.
-        // Navbar is centered with max width 1100px and offset top-4.
-        top: "64px",
+        // Anchored to the very top of the screen, centered horizontally.
+        top: 0,
         left: "50%",
-        transform: "translateX(min(46vw, 510px))",
+        transform: "translateX(-50%)",
       }}
     >
       {/* String */}
