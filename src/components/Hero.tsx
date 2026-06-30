@@ -75,7 +75,7 @@ export default function Hero() {
             <div className="relative rounded-2xl overflow-hidden glass shadow-card">
               <img
                 src={heroImage}
-                alt="Zero Theorys team collaborating on software and marketing projects"
+                alt="Zero Theorys hero illustration"
                 className="w-full h-auto object-cover"
                 width={1200}
                 height={800}
