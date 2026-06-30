@@ -65,31 +65,33 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Right column — image */}
+          {/* Right column — image merged into background, no card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
             className="relative"
           >
-            <div className="relative rounded-2xl overflow-hidden glass shadow-card">
-              <img
-                src={heroImage}
-                alt="Zero Theorys hero illustration"
-                className="w-full h-auto object-cover"
-                width={1200}
-                height={800}
-              />
-            </div>
+            <img
+              src={heroImage}
+              alt="Zero Theorys hero illustration"
+              className="w-full h-auto object-contain mix-blend-screen"
+              style={{
+                filter: "drop-shadow(0 30px 60px rgba(0,0,0,0.5))",
+              }}
+              width={1200}
+              height={800}
+            />
             {/* subtle glow behind image */}
             <div
-              className="absolute -inset-4 -z-10 rounded-3xl opacity-40 blur-3xl"
+              className="absolute -inset-4 -z-10 rounded-3xl opacity-50 blur-3xl"
               style={{
                 background:
-                  "radial-gradient(circle at 50% 50%, oklch(0.68 0.27 300 / 0.3), transparent 70%)",
+                  "radial-gradient(circle at 50% 50%, oklch(0.68 0.27 300 / 0.35), transparent 70%)",
               }}
             />
           </motion.div>
+
         </div>
 
         {/* Stats row */}
