@@ -22,10 +22,10 @@ export default function HangingPendant() {
       const pivotY = rect.top;
       const dx = e.clientX - pivotX;
       const dy = Math.max(e.clientY - pivotY, 1);
-      // Angle in degrees from vertical (down) axis
+      // Angle in degrees from vertical (down) axis — follow the cursor
       const deg = Math.atan2(dx, dy) * (180 / Math.PI);
-      // Clamp swing
-      target.current = Math.max(-35, Math.min(35, deg * 0.6));
+      // Clamp swing (negate so the pendant leans toward the cursor)
+      target.current = Math.max(-45, Math.min(45, -deg * 0.7));
     };
     window.addEventListener("mousemove", handleMove);
     return () => window.removeEventListener("mousemove", handleMove);
@@ -53,11 +53,10 @@ export default function HangingPendant() {
       aria-hidden
       className="pointer-events-none fixed z-40 hidden lg:block"
       style={{
-        // Anchored to the right of the navbar, near the Start project button.
-        // Navbar is centered with max width 1100px and offset top-4.
-        top: "64px",
+        // Anchored to the very top of the screen, centered horizontally.
+        top: 0,
         left: "50%",
-        transform: "translateX(min(46vw, 510px))",
+        transform: "translateX(-50%)",
       }}
     >
       {/* String */}
