@@ -1,6 +1,6 @@
-import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-design.svg";
+import CountUp from "@/components/CountUp";
 
 const stats = [
   { value: "99.98%", label: "Uptime · 90d" },
@@ -8,38 +8,6 @@ const stats = [
   { value: "4.8/5", label: "CSAT · 12mo" },
   { value: "24/7", label: "Global ops" },
 ];
-
-/** Animate digits inside a string from 0 -> target when in view. */
-function CountUp({ value }: { value: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-20% 0px" });
-  const [display, setDisplay] = useState(() => value.replace(/\d/g, "0"));
-
-  useEffect(() => {
-    if (!inView) return;
-    // Extract numbers, animate each, then re-assemble preserving non-digits.
-    const parts = value.split(/(\d+(?:\.\d+)?)/);
-    const nums = parts
-      .map((p, i) => (/\d/.test(p) ? { i, target: parseFloat(p), raw: p } : null))
-      .filter(Boolean) as { i: number; target: number; raw: string }[];
-
-    const current = parts.slice();
-    const controls = nums.map((n) =>
-      animate(0, n.target, {
-        duration: 1.4,
-        ease: [0.22, 1, 0.36, 1],
-        onUpdate: (v) => {
-          const decimals = (n.raw.split(".")[1] || "").length;
-          current[n.i] = decimals ? v.toFixed(decimals) : Math.round(v).toString();
-          setDisplay(current.join(""));
-        },
-      })
-    );
-    return () => controls.forEach((c) => c.stop());
-  }, [inView, value]);
-
-  return <span ref={ref}>{display}</span>;
-}
 
 export default function Hero() {
   return (
