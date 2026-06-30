@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import heroImage from "@/assets/hero-team.jpg";
+import heroImage from "@/assets/hero-design.svg";
 
 const stats = [
   { value: "99.98%", label: "Uptime · 90d" },
