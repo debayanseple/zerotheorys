@@ -18,21 +18,21 @@ export default function Hero() {
         >
           <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-muted-foreground pointer-events-auto">
             <span className="size-1.5 rounded-full bg-neon-blue animate-pulse" />
-            Digital agency · est. 2024
+            Software engineering · Growth marketing
           </span>
           <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.95]">
-            Engineering the<br />
-            <span className="text-gradient">improbable.</span>
+            Code that ships.<br />
+            <span className="text-gradient">Campaigns that scale.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Zero Theorys is a creative engineering studio crafting software, web, brand and growth systems for ambitious teams.
+            Zero Theorys pairs senior software engineers with performance marketers — we build the product and the pipeline that grows it.
           </p>
           <div className="mt-8 flex flex-wrap gap-3 pointer-events-auto">
             <a href="#services" className="rounded-full px-6 py-3 bg-foreground text-background font-medium hover:opacity-90 transition">
-              Explore services
+              Start a build
             </a>
             <a href="#work" className="glass rounded-full px-6 py-3 font-medium hover:bg-white/5 transition">
-              View work →
+              See growth case studies →
             </a>
           </div>
         </motion.div>
