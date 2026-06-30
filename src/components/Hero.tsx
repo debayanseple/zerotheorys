@@ -20,9 +20,9 @@ export default function Hero() {
             <span className="size-1.5 rounded-full bg-neon-blue animate-pulse" />
             Software engineering · Growth marketing
           </span>
-          <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.95]">
+          <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.95]" style={{ textShadow: '0 4px 16px rgba(0,0,0,0.6)' }}>
             Code that ships.<br />
-            <span className="text-gradient">Campaigns that scale.</span>
+            <span className="text-gradient" style={{ textShadow: '0 0 20px rgba(168,85,247,0.6)' }}>Campaigns that scale.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
             Zero Theorys pairs senior software engineers with performance marketers — we build the product and the pipeline that grows it.
