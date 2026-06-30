@@ -1,40 +1,113 @@
 import { motion } from "framer-motion";
-import HeroScene from "./three/HeroScene";
+import heroImage from "@/assets/hero-team.jpg";
+
+const stats = [
+  { value: "40+", label: "Projects Shipped" },
+  { value: "12", label: "Countries Reached" },
+  { value: "99%", label: "Client Retention" },
+  { value: "∞", label: "Ideas Executed" },
+];
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen w-full overflow-hidden noise-grid">
+    <section className="relative min-h-screen w-full overflow-hidden">
       <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-radial)" }} />
-      <div className="absolute inset-0">
-        <HeroScene />
-      </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-40 pb-24 md:pt-56">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-16 md:pt-40 lg:pt-48">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left column — text */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-muted-foreground">
+              <span className="size-1.5 rounded-full bg-neon-blue animate-pulse" />
+              Software engineering · Growth marketing
+            </span>
+
+            <h1
+              className="mt-6 font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]"
+              style={{ textShadow: "0 4px 16px rgba(0,0,0,0.6)" }}
+            >
+              Code that ships.
+              <br />
+              <span
+                className="text-gradient"
+                style={{ textShadow: "0 0 20px rgba(168,85,247,0.6)" }}
+              >
+                Campaigns that scale.
+              </span>
+            </h1>
+
+            <p
+              className="mt-6 max-w-lg text-lg text-foreground/90 leading-relaxed"
+              style={{ textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}
+            >
+              Zero Theorys pairs senior software engineers with performance
+              marketers — we build the product and the pipeline that grows it.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#services"
+                className="rounded-full px-7 py-3 bg-foreground text-background font-medium hover:opacity-90 transition"
+              >
+                Start a build
+              </a>
+              <a
+                href="#work"
+                className="glass rounded-full px-7 py-3 font-medium hover:bg-white/5 transition"
+              >
+                See growth case studies →
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Right column — image */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+            className="relative"
+          >
+            <div className="relative rounded-2xl overflow-hidden glass shadow-card">
+              <img
+                src={heroImage}
+                alt="Zero Theorys team collaborating on software and marketing projects"
+                className="w-full h-auto object-cover"
+                width={1200}
+                height={800}
+              />
+            </div>
+            {/* subtle glow behind image */}
+            <div
+              className="absolute -inset-4 -z-10 rounded-3xl opacity-40 blur-3xl"
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 50%, oklch(0.68 0.27 300 / 0.3), transparent 70%)",
+              }}
+            />
+          </motion.div>
+        </div>
+
+        {/* Stats row */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-3xl pointer-events-none"
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="mt-16 md:mt-24 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 max-w-3xl"
         >
-          <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-muted-foreground pointer-events-auto">
-            <span className="size-1.5 rounded-full bg-neon-blue animate-pulse" />
-            Software engineering · Growth marketing
-          </span>
-          <h1 className="mt-6 font-display text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight leading-[0.95]" style={{ textShadow: '0 4px 16px rgba(0,0,0,0.6)' }}>
-            Code that ships.<br />
-            <span className="text-gradient" style={{ textShadow: '0 0 20px rgba(168,85,247,0.6)' }}>Campaigns that scale.</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-lg text-foreground/90" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
-            Zero Theorys pairs senior software engineers with performance marketers — we build the product and the pipeline that grows it.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3 pointer-events-auto">
-            <a href="#services" className="rounded-full px-6 py-3 bg-foreground text-background font-medium hover:opacity-90 transition">
-              Start a build
-            </a>
-            <a href="#work" className="glass rounded-full px-6 py-3 font-medium hover:bg-white/5 transition">
-              See growth case studies →
-            </a>
-          </div>
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center md:text-left">
+              <div className="text-2xl md:text-3xl font-display font-bold tracking-tight">
+                {stat.value}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground uppercase tracking-widest">
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </motion.div>
       </div>
 
