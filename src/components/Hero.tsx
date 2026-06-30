@@ -13,7 +13,7 @@ export default function Hero() {
     <section id="hero" className="relative min-h-screen w-full overflow-hidden">
       <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-radial)" }} />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-16 md:pt-40 lg:pt-48">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-16 md:pt-24 lg:pt-28">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left column — text */}
           <motion.div
