@@ -9,6 +9,7 @@ import Stats from "@/components/Stats";
 import Security from "@/components/Security";
 import CTA from "@/components/CTA";
 import HangingPendant from "@/components/HangingPendant";
+import ScrollFX from "@/components/ScrollFX";
 
 
 export const Route = createFileRoute("/")({
