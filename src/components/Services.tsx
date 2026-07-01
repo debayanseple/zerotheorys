@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import {
   Sparkles,
   Bot,
@@ -10,9 +12,9 @@ import {
   Headphones,
 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-const leftServices = [
+const services = [
   {
     icon: Sparkles,
     title: "AI Solutions",
@@ -31,9 +33,6 @@ const leftServices = [
     desc: "Custom software, SaaS platforms, and internal tools shipped by senior engineers.",
     tag: "03 / Systems",
   },
-];
-
-const rightServices = [
   {
     icon: Globe,
     title: "Website Development",
@@ -54,163 +53,119 @@ const rightServices = [
   },
 ];
 
-type Service = (typeof leftServices)[number];
-
-function OrbitCircle({
-  services,
-  side,
-  attr,
-}: {
-  services: Service[];
-  side: "left" | "right";
-  attr: string;
-}) {
-  return (
-    <div className="relative flex items-center justify-center w-full h-full">
-      {/* orbit ring */}
-      <div className="absolute size-[420px] md:size-[520px] rounded-full border border-white/10" />
-      <div className="absolute size-[280px] md:size-[340px] rounded-full border border-white/5" />
-
-      {/* hub */}
-      <div className="absolute size-[140px] md:size-[170px] rounded-full glass flex items-center justify-center">
-        <div className="text-center px-3">
-          <div className="font-display text-xl md:text-2xl font-semibold tracking-tight text-gradient">
-            {side === "left" ? "Build" : "Grow"}
-          </div>
-          <div className="mt-1 text-[8px] tracking-[0.3em] uppercase text-muted-foreground">
-            {side === "left" ? "Engineering" : "Distribution"}
-          </div>
-        </div>
-      </div>
-
-      {/* cards positioned at center; GSAP places them on the orbit */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative size-0">
-          {services.map((s, i) => (
-            <div
-              key={i}
-              data-orbit-card={attr}
-              data-index={i}
-              className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 w-[220px] md:w-[240px] will-change-transform"
-            >
-              <div className="glass rounded-2xl p-4">
-                <div className="size-9 rounded-xl glass flex items-center justify-center mb-2">
-                  <s.icon className="size-4 text-foreground" strokeWidth={1.5} />
-                </div>
-                <span className="text-[10px] tracking-widest uppercase text-muted-foreground">
-                  {s.tag}
-                </span>
-                <h3 className="mt-1 font-display text-base md:text-lg font-semibold tracking-tight leading-tight">
-                  {s.title}
-                </h3>
-                <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
-                  {s.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function Services() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const grid = gridRef.current;
+    if (!grid) return;
+    const cards = gsap.utils.toArray<HTMLElement>(grid.querySelectorAll("[data-service-card]"));
+    if (!cards.length) return;
 
     const ctx = gsap.context(() => {
-      const setupOrbit = (attr: string, direction: 1 | -1) => {
-        const cards = gsap.utils.toArray<HTMLElement>(
-          `[data-orbit-card="${attr}"]`
-        );
-        const total = cards.length;
-        const radius = Math.min(window.innerWidth, 1400) * 0.13;
+      cards.forEach((card, i) => {
+        // alternate sides: even from left, odd from right — arc into place
+        const fromLeft = i % 2 === 0;
+        const dir = fromLeft ? -1 : 1;
 
-        // final resting angles: evenly spaced around the circle
-        const finalAngles = cards.map((_, i) => -90 + (360 / total) * i);
+        // Motion path: start far off to the side and below, arc up & inward
+        const path = [
+          { x: dir * 620, y: 260, rotate: dir * -35 },
+          { x: dir * 380, y: 40, rotate: dir * -18 },
+          { x: dir * 160, y: -30, rotate: dir * -6 },
+          { x: 0, y: 0, rotate: 0 },
+        ];
 
-        cards.forEach((card) => {
-          gsap.set(card, {
-            x: 0,
-            y: 0,
-            scale: 0.5,
-            autoAlpha: 0,
-            filter: "blur(12px)",
-            transformOrigin: "50% 50%",
-          });
+        gsap.set(card, {
+          x: path[0].x,
+          y: path[0].y,
+          rotate: path[0].rotate,
+          opacity: 0,
+          filter: "blur(10px)",
+          transformOrigin: "50% 50%",
         });
 
-        cards.forEach((card, i) => {
-          const endAngle = finalAngles[i];
-          // sweep 220deg in from the outside, direction differs per side
-          const startAngle = endAngle - direction * 220;
-          const steps = 30;
-          const xs: number[] = [];
-          const ys: number[] = [];
-          for (let s = 0; s <= steps; s++) {
-            const t = s / steps;
-            const eased = 1 - Math.pow(1 - t, 2);
-            const a =
-              (startAngle + (endAngle - startAngle) * eased) *
-              (Math.PI / 180);
-            const r = radius * (0.5 + 0.5 * eased);
-            xs.push(Math.cos(a) * r);
-            ys.push(Math.sin(a) * r);
-          }
-
-          gsap.to(card, {
-            keyframes: { x: xs, y: ys },
-            autoAlpha: 1,
-            scale: 1,
-            filter: "blur(0px)",
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: `+=${total * 90}%`,
-              scrub: 1.1,
-            },
-            // stagger via delay on the sub-tween within the scrubbed range
-            // by offsetting start position through immediateRender + delay
-            delay: i * 0.4,
-          });
+        gsap.to(card, {
+          motionPath: {
+            path,
+            curviness: 1.5,
+            autoRotate: false,
+          },
+          rotate: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          ease: "power3.out",
+          duration: 1.4,
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            end: "top 40%",
+            scrub: 0.8,
+          },
         });
-      };
-
-      setupOrbit("left", -1);
-      setupOrbit("right", 1);
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: `+=${3 * 90}%`,
-        pin: true,
-        anticipatePin: 1,
       });
-    }, section);
+    }, grid);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section
-      id="services"
-      ref={sectionRef}
-      className="relative h-screen overflow-hidden"
-    >
-      {/* label */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] uppercase text-muted-foreground z-20">
-        Our Services
-      </div>
+    <section id="services" className="relative py-32 px-6 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="max-w-3xl mb-16">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-xs tracking-[0.3em] uppercase text-muted-foreground"
+          >
+            What we do
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mt-4 font-display text-4xl md:text-6xl font-semibold tracking-tight"
+          >
+            Six disciplines.
+            <br />
+            <span className="text-gradient">One accountable partner.</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="mt-6 text-lg text-muted-foreground max-w-xl"
+          >
+            Replace three vendors with one studio that owns the strategy, the build, the growth, and the round-the-clock
+            operations.
+          </motion.p>
+        </div>
 
-      {/* two orbit stages, side by side */}
-      <div className="absolute inset-0 grid grid-cols-2">
-        <OrbitCircle services={leftServices} side="left" attr="left" />
-        <OrbitCircle services={rightServices} side="right" attr="right" />
+        <div
+          ref={gridRef}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {services.map((s, i) => (
+            <div
+              key={s.title}
+              data-service-card
+              data-side={i % 2 === 0 ? "left" : "right"}
+              className="glass glass-hover rounded-3xl p-8 flex flex-col will-change-transform"
+            >
+              <div className="flex justify-between items-start">
+                <div className="size-12 rounded-2xl glass flex items-center justify-center">
+                  <s.icon className="size-5 text-foreground" strokeWidth={1.5} />
+                </div>
+                <span className="text-[10px] tracking-widest uppercase text-muted-foreground">{s.tag}</span>
+              </div>
+              <h3 className="mt-8 font-display text-2xl font-semibold tracking-tight">{s.title}</h3>
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
