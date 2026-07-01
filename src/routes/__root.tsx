@@ -89,6 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "An interactive 3D website showcasing Zero Theorys' digital agency services with a modern, minimalist aesthetic." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e4519d6a-101c-4066-9b52-d3fe337db49f/id-preview-17ed3bde--7438bd3c-d016-421a-aa0d-4f59acbf6cb9.lovable.app-1782832257458.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e4519d6a-101c-4066-9b52-d3fe337db49f/id-preview-17ed3bde--7438bd3c-d016-421a-aa0d-4f59acbf6cb9.lovable.app-1782832257458.png" },
+      { name: "google-site-verification", content: "8P3S7cmKTWo7WYm5vPuAwXLWw-hGKMkMs1rVvqGzbUs" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
