@@ -133,23 +133,23 @@ export default function Services() {
   return (
     <section id="services" ref={sectionRef} className="relative h-screen overflow-hidden">
       {/* label */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] uppercase text-muted-foreground z-20">
+      <div className="absolute top-6 md:top-10 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] uppercase text-muted-foreground z-20">
         Our Services
       </div>
 
       {/* center visual */}
       <div
         data-center
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[340px] md:size-[420px] rounded-3xl glass flex items-center justify-center will-change-transform"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[240px] sm:size-[280px] md:size-[340px] rounded-3xl glass flex items-center justify-center will-change-transform"
       >
         <div className="text-center px-6">
-          <div className="font-display text-5xl md:text-6xl font-semibold tracking-tight text-gradient">
+          <div className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gradient">
             Zero
           </div>
-          <div className="font-display text-5xl md:text-6xl font-semibold tracking-tight">
+          <div className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight">
             Theorys
           </div>
-          <div className="mt-4 text-[10px] tracking-[0.35em] uppercase text-muted-foreground">
+          <div className="mt-3 md:mt-4 text-[10px] tracking-[0.35em] uppercase text-muted-foreground">
             Different disciplines · One standard of craft
           </div>
         </div>
@@ -162,14 +162,14 @@ export default function Services() {
             {/* left card — top-left quadrant */}
             <div
               data-side="left"
-              className="absolute left-6 md:left-16 top-1/2 -translate-y-[140%] md:-translate-y-[120%] max-w-xs will-change-transform"
+              className="absolute left-4 sm:left-8 md:left-16 top-[12%] md:top-[14%] max-w-[220px] sm:max-w-xs will-change-transform"
             >
               <ServiceBlock s={pair[0]} align="left" />
             </div>
             {/* right card — bottom-right quadrant (like Trionn's diagonal layout) */}
             <div
               data-side="right"
-              className="absolute right-6 md:right-16 top-1/2 translate-y-[20%] max-w-xs text-right will-change-transform"
+              className="absolute right-4 sm:right-8 md:right-16 bottom-[12%] md:bottom-[14%] max-w-[220px] sm:max-w-xs text-right will-change-transform"
             >
               <ServiceBlock s={pair[1]} align="right" />
             </div>
@@ -178,7 +178,7 @@ export default function Services() {
       </div>
 
       {/* progress dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {steps.map((_, i) => (
           <span key={i} className="size-1.5 rounded-full bg-foreground/30" />
         ))}
@@ -196,14 +196,14 @@ function ServiceBlock({
 }) {
   return (
     <div className={align === "right" ? "flex flex-col items-end" : "flex flex-col items-start"}>
-      <div className="size-11 rounded-2xl glass flex items-center justify-center mb-4">
-        <s.icon className="size-5 text-foreground" strokeWidth={1.5} />
+      <div className="size-9 rounded-xl glass flex items-center justify-center mb-3">
+        <s.icon className="size-4 text-foreground" strokeWidth={1.5} />
       </div>
       <span className="text-[10px] tracking-widest uppercase text-muted-foreground">{s.tag}</span>
-      <h3 className="mt-2 font-display text-3xl md:text-4xl font-semibold tracking-tight leading-tight">
+      <h3 className="mt-1.5 font-display text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight leading-tight">
         {s.title}
       </h3>
-      <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+      <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
     </div>
   );
 }
