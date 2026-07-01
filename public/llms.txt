@@ -1,0 +1,9 @@
+# Zero Theorys
+
+> One accountable partner for AI, software engineering, performance marketing and 24/7 operations — built for ambitious companies that want speed without the overhead of multiple vendors.
+
+Zero Theorys integrates strategy, design, development and growth into a single senior team. The site outlines services (AI & automation, custom software, websites, performance marketing, BPO), the delivery process, case studies, and a manifesto on how the team works.
+
+## Pages
+
+- [Home](/): Overview of services, process, case studies, and team philosophy.
