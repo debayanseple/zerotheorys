@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import {
   Sparkles,
   Bot,
@@ -12,7 +10,7 @@ import {
   Headphones,
 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
 const services = [
   {
@@ -53,120 +51,159 @@ const services = [
   },
 ];
 
+// group into pairs (left, right) per scroll step
+const steps: Array<[typeof services[number], typeof services[number]]> = [
+  [services[0], services[1]],
+  [services[2], services[3]],
+  [services[4], services[5]],
+];
+
 export default function Services() {
-  const gridRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const grid = gridRef.current;
-    if (!grid) return;
-    const cards = gsap.utils.toArray<HTMLElement>(grid.querySelectorAll("[data-service-card]"));
-    if (!cards.length) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
     const ctx = gsap.context(() => {
-      cards.forEach((card, i) => {
-        // alternate sides: even from left, odd from right — arc into place
-        const fromLeft = i % 2 === 0;
-        const dir = fromLeft ? -1 : 1;
+      const stepEls = gsap.utils.toArray<HTMLElement>("[data-step]");
+      const centerEl = section.querySelector<HTMLElement>("[data-center]");
 
-        // Motion path: start far off to the side and below, arc up & inward
-        const path = [
-          { x: dir * 620, y: 260, rotate: dir * -35 },
-          { x: dir * 380, y: 40, rotate: dir * -18 },
-          { x: dir * 160, y: -30, rotate: dir * -6 },
-          { x: 0, y: 0, rotate: 0 },
-        ];
-
-        gsap.set(card, {
-          x: path[0].x,
-          y: path[0].y,
-          rotate: path[0].rotate,
-          opacity: 0,
-          filter: "blur(10px)",
-          transformOrigin: "50% 50%",
-        });
-
-        gsap.to(card, {
-          motionPath: {
-            path,
-            curviness: 1.5,
-            autoRotate: false,
-          },
-          rotate: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-          ease: "power3.out",
-          duration: 1.4,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 90%",
-            end: "top 40%",
-            scrub: 0.8,
-          },
-        });
+      // init: hide all except first
+      stepEls.forEach((el, i) => {
+        const leftCard = el.querySelector<HTMLElement>("[data-side='left']");
+        const rightCard = el.querySelector<HTMLElement>("[data-side='right']");
+        gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 });
+        if (leftCard) gsap.set(leftCard, { x: i === 0 ? 0 : -120, autoAlpha: i === 0 ? 1 : 0, filter: i === 0 ? "blur(0px)" : "blur(8px)" });
+        if (rightCard) gsap.set(rightCard, { x: i === 0 ? 0 : 120, autoAlpha: i === 0 ? 1 : 0, filter: i === 0 ? "blur(0px)" : "blur(8px)" });
       });
-    }, grid);
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: `+=${stepEls.length * 100}%`,
+          scrub: 0.8,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
+
+      // subtle center pulse across the whole pin
+      if (centerEl) {
+        tl.to(
+          centerEl,
+          { scale: 1.06, rotate: 3, ease: "none", duration: stepEls.length },
+          0
+        );
+      }
+
+      // transition between steps
+      for (let i = 0; i < stepEls.length - 1; i++) {
+        const curr = stepEls[i];
+        const next = stepEls[i + 1];
+        const currL = curr.querySelector<HTMLElement>("[data-side='left']");
+        const currR = curr.querySelector<HTMLElement>("[data-side='right']");
+        const nextL = next.querySelector<HTMLElement>("[data-side='left']");
+        const nextR = next.querySelector<HTMLElement>("[data-side='right']");
+
+        const at = i + 0.35; // hold, then swap
+        tl.to(currL, { x: -140, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.in" }, at)
+          .to(currR, { x: 140, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.in" }, at)
+          .set(curr, { autoAlpha: 0 }, at + 0.5)
+          .set(next, { autoAlpha: 1 }, at + 0.5)
+          .fromTo(
+            nextL,
+            { x: -160, autoAlpha: 0, filter: "blur(10px)" },
+            { x: 0, autoAlpha: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" },
+            at + 0.5
+          )
+          .fromTo(
+            nextR,
+            { x: 160, autoAlpha: 0, filter: "blur(10px)" },
+            { x: 0, autoAlpha: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" },
+            at + 0.5
+          );
+      }
+    }, section);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="services" className="relative py-32 px-6 overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-3xl mb-16">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-xs tracking-[0.3em] uppercase text-muted-foreground"
-          >
-            What we do
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="mt-4 font-display text-4xl md:text-6xl font-semibold tracking-tight"
-          >
-            Six disciplines.
-            <br />
-            <span className="text-gradient">One accountable partner.</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="mt-6 text-lg text-muted-foreground max-w-xl"
-          >
-            Replace three vendors with one studio that owns the strategy, the build, the growth, and the round-the-clock
-            operations.
-          </motion.p>
-        </div>
+    <section id="services" ref={sectionRef} className="relative h-screen overflow-hidden">
+      {/* label */}
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] uppercase text-muted-foreground z-20">
+        Our Services
+      </div>
 
-        <div
-          ref={gridRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {services.map((s, i) => (
-            <div
-              key={s.title}
-              data-service-card
-              data-side={i % 2 === 0 ? "left" : "right"}
-              className="glass glass-hover rounded-3xl p-8 flex flex-col will-change-transform"
-            >
-              <div className="flex justify-between items-start">
-                <div className="size-12 rounded-2xl glass flex items-center justify-center">
-                  <s.icon className="size-5 text-foreground" strokeWidth={1.5} />
-                </div>
-                <span className="text-[10px] tracking-widest uppercase text-muted-foreground">{s.tag}</span>
-              </div>
-              <h3 className="mt-8 font-display text-2xl font-semibold tracking-tight">{s.title}</h3>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-            </div>
-          ))}
+      {/* center visual */}
+      <div
+        data-center
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[340px] md:size-[420px] rounded-3xl glass flex items-center justify-center will-change-transform"
+      >
+        <div className="text-center px-6">
+          <div className="font-display text-5xl md:text-6xl font-semibold tracking-tight text-gradient">
+            Zero
+          </div>
+          <div className="font-display text-5xl md:text-6xl font-semibold tracking-tight">
+            Theorys
+          </div>
+          <div className="mt-4 text-[10px] tracking-[0.35em] uppercase text-muted-foreground">
+            Different disciplines · One standard of craft
+          </div>
         </div>
       </div>
+
+      {/* steps overlay */}
+      <div className="absolute inset-0">
+        {steps.map((pair, i) => (
+          <div key={i} data-step className="absolute inset-0">
+            {/* left card — top-left quadrant */}
+            <div
+              data-side="left"
+              className="absolute left-6 md:left-16 top-1/2 -translate-y-[140%] md:-translate-y-[120%] max-w-xs will-change-transform"
+            >
+              <ServiceBlock s={pair[0]} align="left" />
+            </div>
+            {/* right card — bottom-right quadrant (like Trionn's diagonal layout) */}
+            <div
+              data-side="right"
+              className="absolute right-6 md:right-16 top-1/2 translate-y-[20%] max-w-xs text-right will-change-transform"
+            >
+              <ServiceBlock s={pair[1]} align="right" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* progress dots */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {steps.map((_, i) => (
+          <span key={i} className="size-1.5 rounded-full bg-foreground/30" />
+        ))}
+      </div>
     </section>
+  );
+}
+
+function ServiceBlock({
+  s,
+  align,
+}: {
+  s: typeof services[number];
+  align: "left" | "right";
+}) {
+  return (
+    <div className={align === "right" ? "flex flex-col items-end" : "flex flex-col items-start"}>
+      <div className="size-11 rounded-2xl glass flex items-center justify-center mb-4">
+        <s.icon className="size-5 text-foreground" strokeWidth={1.5} />
+      </div>
+      <span className="text-[10px] tracking-widest uppercase text-muted-foreground">{s.tag}</span>
+      <h3 className="mt-2 font-display text-3xl md:text-4xl font-semibold tracking-tight leading-tight">
+        {s.title}
+      </h3>
+      <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+    </div>
   );
 }
