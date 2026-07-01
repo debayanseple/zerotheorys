@@ -9,6 +9,7 @@ import Stats from "@/components/Stats";
 import Security from "@/components/Security";
 import CTA from "@/components/CTA";
 import HangingPendant from "@/components/HangingPendant";
+import ScrollFX from "@/components/ScrollFX";
 
 
 export const Route = createFileRoute("/")({
@@ -26,8 +27,10 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <main className="relative">
+      <ScrollFX />
       <Navbar />
       <HangingPendant />
+
 
       <Hero />
       <Services />
