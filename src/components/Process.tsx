@@ -33,8 +33,9 @@ export default function Process() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${distance() + window.innerHeight * 0.6}`,
-          scrub: 1.2,
+          end: () => `+=${(distance() + window.innerHeight * 0.6) * 2}`,
+          scrub: 2.5,
+
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -81,11 +82,11 @@ export default function Process() {
         </div>
       </div>
 
-      {/* horizontal track */}
-      <div className="absolute inset-0 flex items-center">
+      {/* horizontal track — shifted below headline */}
+      <div className="absolute inset-x-0 top-[38%] md:top-[42%] -translate-y-1/2 flex items-center">
         <div
           ref={trackRef}
-          className="flex gap-8 pl-12 md:pl-24 pr-[50vw] will-change-transform"
+          className="flex gap-6 md:gap-8 pl-12 md:pl-24 pr-[50vw] will-change-transform"
         >
           {phases.map((p, i) => {
             const isActive = i === active;
@@ -93,12 +94,13 @@ export default function Process() {
               <div
                 key={p.n}
                 data-phase-card
-                className={`shrink-0 w-[78vw] sm:w-[520px] md:w-[600px] h-[62vh] md:h-[520px] rounded-[2rem] p-8 md:p-12 flex flex-col justify-between glass transition-all duration-500 ease-out ${
+                className={`shrink-0 w-[78vw] sm:w-[480px] md:w-[540px] h-[52vh] max-h-[440px] rounded-[2rem] p-6 md:p-10 flex flex-col justify-between glass transition-all duration-500 ease-out ${
                   isActive
                     ? "opacity-100 scale-100 border-foreground/30 shadow-2xl"
                     : "opacity-40 scale-[0.92]"
                 }`}
               >
+
                 <div className="flex items-baseline justify-between">
                   <span
                     className={`font-display text-6xl md:text-8xl font-semibold transition-colors duration-500 ${
