@@ -12,7 +12,7 @@ import {
   Headphones,
 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 const services = [
   {
