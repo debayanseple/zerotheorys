@@ -83,7 +83,7 @@ export default function Process() {
       </div>
 
       {/* horizontal track — shifted below headline */}
-      <div className="absolute inset-x-0 top-[38%] md:top-[42%] -translate-y-1/2 flex items-center">
+      <div className="absolute inset-x-0 top-[46%] md:top-[50%] -translate-y-1/2 flex items-center">
         <div
           ref={trackRef}
           className="flex gap-6 md:gap-8 pl-12 md:pl-24 pr-[50vw] will-change-transform"
