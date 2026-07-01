@@ -1,5 +1,17 @@
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Bot, Code2, Globe, TrendingUp, Headphones } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  Sparkles,
+  Bot,
+  Code2,
+  Globe,
+  TrendingUp,
+  Headphones,
+} from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const services = [
   {
@@ -36,12 +48,56 @@ const services = [
     icon: Headphones,
     title: "Graphic Design Solutions",
     desc: "High-impact branding, UI/UX, marketing collaterals, and digital-first visual identities engineered for scale.",
+    tag: "06 / Identity",
   },
 ];
 
 export default function Services() {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const cards = gsap.utils.toArray<HTMLElement>(grid.querySelectorAll("[data-service-card]"));
+    if (!cards.length) return;
+
+    const ctx = gsap.context(() => {
+      cards.forEach((card, i) => {
+        // alternate sides: even from left, odd from right
+        const fromLeft = i % 2 === 0;
+        gsap.fromTo(
+          card,
+          {
+            x: fromLeft ? -260 : 260,
+            y: 40,
+            rotate: fromLeft ? -6 : 6,
+            opacity: 0,
+            filter: "blur(8px)",
+          },
+          {
+            x: 0,
+            y: 0,
+            rotate: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            ease: "power3.out",
+            duration: 1.1,
+            scrollTrigger: {
+              trigger: card,
+              start: "top 88%",
+              end: "top 45%",
+              scrub: 0.6,
+            },
+          },
+        );
+      });
+    }, grid);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="services" className="relative py-32 px-6">
+    <section id="services" className="relative py-32 px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mb-16">
           <motion.p
@@ -75,15 +131,16 @@ export default function Services() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          ref={gridRef}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {services.map((s, i) => (
-            <motion.div
+            <div
               key={s.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ delay: i * 0.06, duration: 0.6 }}
-              className="glass glass-hover rounded-3xl p-8 flex flex-col"
+              data-service-card
+              data-side={i % 2 === 0 ? "left" : "right"}
+              className="glass glass-hover rounded-3xl p-8 flex flex-col will-change-transform"
             >
               <div className="flex justify-between items-start">
                 <div className="size-12 rounded-2xl glass flex items-center justify-center">
@@ -93,7 +150,7 @@ export default function Services() {
               </div>
               <h3 className="mt-8 font-display text-2xl font-semibold tracking-tight">{s.title}</h3>
               <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
