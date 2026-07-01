@@ -51,13 +51,6 @@ const services = [
   },
 ];
 
-// group into pairs (left, right) per scroll step
-const steps: Array<[typeof services[number], typeof services[number]]> = [
-  [services[0], services[1]],
-  [services[2], services[3]],
-  [services[4], services[5]],
-];
-
 export default function Services() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -66,144 +59,134 @@ export default function Services() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      const stepEls = gsap.utils.toArray<HTMLElement>("[data-step]");
-      const centerEl = section.querySelector<HTMLElement>("[data-center]");
+      const cards = gsap.utils.toArray<HTMLElement>("[data-orbit-card]");
+      const total = cards.length;
 
-      // init: hide all except first
-      stepEls.forEach((el, i) => {
-        const leftCard = el.querySelector<HTMLElement>("[data-side='left']");
-        const rightCard = el.querySelector<HTMLElement>("[data-side='right']");
-        gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 });
-        if (leftCard) gsap.set(leftCard, { x: i === 0 ? 0 : -120, autoAlpha: i === 0 ? 1 : 0, filter: i === 0 ? "blur(0px)" : "blur(8px)" });
-        if (rightCard) gsap.set(rightCard, { x: i === 0 ? 0 : 120, autoAlpha: i === 0 ? 1 : 0, filter: i === 0 ? "blur(0px)" : "blur(8px)" });
+      // Orbit radius (responsive-ish based on viewport)
+      const radius = Math.min(window.innerWidth, 1100) * 0.32;
+
+      // Final resting angles: evenly spaced around a circle,
+      // starting at top (-90deg) so first card lands at 12 o'clock.
+      const finalAngles = cards.map(
+        (_, i) => -90 + (360 / total) * i
+      );
+
+      // Initial state: all cards stacked at center, invisible.
+      cards.forEach((card) => {
+        gsap.set(card, {
+          x: 0,
+          y: 0,
+          rotate: 0,
+          scale: 0.6,
+          autoAlpha: 0,
+          filter: "blur(12px)",
+          transformOrigin: "50% 50%",
+        });
       });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: `+=${stepEls.length * 100}%`,
-          scrub: 0.8,
+          end: `+=${total * 90}%`,
+          scrub: 1.1,
           pin: true,
           anticipatePin: 1,
         },
       });
 
-      // subtle center pulse across the whole pin
-      if (centerEl) {
+      // Each card sweeps in along a circular arc, one after another.
+      cards.forEach((card, i) => {
+        const endAngle = finalAngles[i];
+        // start the sweep 180deg behind final position (comes around the circle)
+        const startAngle = endAngle - 180;
+        const steps = 24;
+
+        const path: { x: number; y: number }[] = [];
+        for (let s = 0; s <= steps; s++) {
+          const t = s / steps;
+          // ease-out along the arc
+          const eased = 1 - Math.pow(1 - t, 2);
+          const a = (startAngle + (endAngle - startAngle) * eased) * (Math.PI / 180);
+          // spiral in: radius grows from 0.4r to r as it sweeps
+          const r = radius * (0.4 + 0.6 * eased);
+          path.push({ x: Math.cos(a) * r, y: Math.sin(a) * r });
+        }
+
         tl.to(
-          centerEl,
-          { scale: 1.06, rotate: 3, ease: "none", duration: stepEls.length },
-          0
+          card,
+          {
+            keyframes: {
+              x: path.map((p) => p.x),
+              y: path.map((p) => p.y),
+            },
+            autoAlpha: 1,
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 1,
+            ease: "none",
+          },
+          i * 0.75
         );
-      }
-
-      // transition between steps
-      for (let i = 0; i < stepEls.length - 1; i++) {
-        const curr = stepEls[i];
-        const next = stepEls[i + 1];
-        const currL = curr.querySelector<HTMLElement>("[data-side='left']");
-        const currR = curr.querySelector<HTMLElement>("[data-side='right']");
-        const nextL = next.querySelector<HTMLElement>("[data-side='left']");
-        const nextR = next.querySelector<HTMLElement>("[data-side='right']");
-
-        const at = i + 0.35; // hold, then swap
-        tl.to(currL, { x: -140, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.in" }, at)
-          .to(currR, { x: 140, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.in" }, at)
-          .set(curr, { autoAlpha: 0 }, at + 0.5)
-          .set(next, { autoAlpha: 1 }, at + 0.5)
-          .fromTo(
-            nextL,
-            { x: -160, autoAlpha: 0, filter: "blur(10px)" },
-            { x: 0, autoAlpha: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" },
-            at + 0.5
-          )
-          .fromTo(
-            nextR,
-            { x: 160, autoAlpha: 0, filter: "blur(10px)" },
-            { x: 0, autoAlpha: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" },
-            at + 0.5
-          );
-      }
+      });
     }, section);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="services" ref={sectionRef} className="relative h-screen overflow-hidden">
+    <section
+      id="services"
+      ref={sectionRef}
+      className="relative h-screen overflow-hidden"
+    >
       {/* label */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] uppercase text-muted-foreground z-20">
         Our Services
       </div>
 
       {/* center visual */}
-      <div
-        data-center
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[340px] md:size-[420px] rounded-3xl glass flex items-center justify-center will-change-transform"
-      >
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[260px] md:size-[320px] rounded-full glass flex items-center justify-center will-change-transform z-10">
         <div className="text-center px-6">
-          <div className="font-display text-5xl md:text-6xl font-semibold tracking-tight text-gradient">
+          <div className="font-display text-4xl md:text-5xl font-semibold tracking-tight text-gradient">
             Zero
           </div>
-          <div className="font-display text-5xl md:text-6xl font-semibold tracking-tight">
+          <div className="font-display text-4xl md:text-5xl font-semibold tracking-tight">
             Theorys
           </div>
-          <div className="mt-4 text-[10px] tracking-[0.35em] uppercase text-muted-foreground">
-            Different disciplines · One standard of craft
+          <div className="mt-3 text-[9px] tracking-[0.35em] uppercase text-muted-foreground">
+            One standard of craft
           </div>
         </div>
       </div>
 
-      {/* steps overlay */}
-      <div className="absolute inset-0">
-        {steps.map((pair, i) => (
-          <div key={i} data-step className="absolute inset-0">
-            {/* left card — top-left quadrant */}
+      {/* orbit stage — each card is absolutely positioned at center, GSAP moves it */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative size-0">
+          {services.map((s, i) => (
             <div
-              data-side="left"
-              className="absolute left-6 md:left-16 top-1/2 -translate-y-[140%] md:-translate-y-[120%] max-w-xs will-change-transform"
+              key={i}
+              data-orbit-card
+              className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 w-[240px] md:w-[260px] will-change-transform"
             >
-              <ServiceBlock s={pair[0]} align="left" />
+              <div className="glass rounded-2xl p-5">
+                <div className="size-10 rounded-xl glass flex items-center justify-center mb-3">
+                  <s.icon className="size-4 text-foreground" strokeWidth={1.5} />
+                </div>
+                <span className="text-[10px] tracking-widest uppercase text-muted-foreground">
+                  {s.tag}
+                </span>
+                <h3 className="mt-1.5 font-display text-lg md:text-xl font-semibold tracking-tight leading-tight">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                  {s.desc}
+                </p>
+              </div>
             </div>
-            {/* right card — bottom-right quadrant (like Trionn's diagonal layout) */}
-            <div
-              data-side="right"
-              className="absolute right-6 md:right-16 top-1/2 translate-y-[20%] max-w-xs text-right will-change-transform"
-            >
-              <ServiceBlock s={pair[1]} align="right" />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* progress dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-        {steps.map((_, i) => (
-          <span key={i} className="size-1.5 rounded-full bg-foreground/30" />
-        ))}
+          ))}
+        </div>
       </div>
     </section>
-  );
-}
-
-function ServiceBlock({
-  s,
-  align,
-}: {
-  s: typeof services[number];
-  align: "left" | "right";
-}) {
-  return (
-    <div className={align === "right" ? "flex flex-col items-end" : "flex flex-col items-start"}>
-      <div className="size-11 rounded-2xl glass flex items-center justify-center mb-4">
-        <s.icon className="size-5 text-foreground" strokeWidth={1.5} />
-      </div>
-      <span className="text-[10px] tracking-widest uppercase text-muted-foreground">{s.tag}</span>
-      <h3 className="mt-2 font-display text-3xl md:text-4xl font-semibold tracking-tight leading-tight">
-        {s.title}
-      </h3>
-      <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-    </div>
   );
 }
