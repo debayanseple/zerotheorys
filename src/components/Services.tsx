@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import {
   Sparkles,
   Bot,
@@ -11,7 +12,7 @@ import {
   Headphones,
 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 const services = [
   {
@@ -63,33 +64,45 @@ export default function Services() {
 
     const ctx = gsap.context(() => {
       cards.forEach((card, i) => {
-        // alternate sides: even from left, odd from right
+        // alternate sides: even from left, odd from right — arc into place
         const fromLeft = i % 2 === 0;
-        gsap.fromTo(
-          card,
-          {
-            x: fromLeft ? -260 : 260,
-            y: 40,
-            rotate: fromLeft ? -6 : 6,
-            opacity: 0,
-            filter: "blur(8px)",
+        const dir = fromLeft ? -1 : 1;
+
+        // Motion path: start far off to the side and below, arc up & inward
+        const path = [
+          { x: dir * 620, y: 260, rotate: dir * -35 },
+          { x: dir * 380, y: 40, rotate: dir * -18 },
+          { x: dir * 160, y: -30, rotate: dir * -6 },
+          { x: 0, y: 0, rotate: 0 },
+        ];
+
+        gsap.set(card, {
+          x: path[0].x,
+          y: path[0].y,
+          rotate: path[0].rotate,
+          opacity: 0,
+          filter: "blur(10px)",
+          transformOrigin: "50% 50%",
+        });
+
+        gsap.to(card, {
+          motionPath: {
+            path,
+            curviness: 1.5,
+            autoRotate: false,
           },
-          {
-            x: 0,
-            y: 0,
-            rotate: 0,
-            opacity: 1,
-            filter: "blur(0px)",
-            ease: "power3.out",
-            duration: 1.1,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 88%",
-              end: "top 45%",
-              scrub: 0.6,
-            },
+          rotate: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          ease: "power3.out",
+          duration: 1.4,
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            end: "top 40%",
+            scrub: 0.8,
           },
-        );
+        });
       });
     }, grid);
 
