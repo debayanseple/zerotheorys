@@ -33,8 +33,9 @@ export default function Process() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${distance() + window.innerHeight * 0.6}`,
-          scrub: 1.2,
+          end: () => `+=${(distance() + window.innerHeight * 0.6) * 2}`,
+          scrub: 2.5,
+
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
