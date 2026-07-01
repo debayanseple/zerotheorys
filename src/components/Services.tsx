@@ -82,8 +82,8 @@ export default function Services() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: `+=${stepEls.length * 100}%`,
-          scrub: 0.8,
+          end: `+=${stepEls.length * 180}%`,
+          scrub: 2,
           pin: true,
           anticipatePin: 1,
         },
