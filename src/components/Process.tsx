@@ -1,4 +1,9 @@
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const phases = [
   { n: "01", t: "Discover", when: "Week 1", d: "Align on goals, constraints, success metrics, and risks." },
@@ -9,10 +14,52 @@ const phases = [
 ];
 
 export default function Process() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
+
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray<HTMLElement>("[data-phase-card]");
+      const distance = () => track.scrollWidth - window.innerWidth + 96;
+
+      gsap.to(track, {
+        x: () => -distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${distance() + window.innerHeight * 0.6}`,
+          scrub: 1.2,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const idx = Math.min(
+              cards.length - 1,
+              Math.floor(self.progress * cards.length + 0.15)
+            );
+            setActive(idx);
+          },
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="process" className="relative py-32 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-3xl mb-16">
+    <section
+      id="process"
+      ref={sectionRef}
+      className="relative h-screen overflow-hidden"
+    >
+      <div className="absolute top-10 md:top-16 left-0 right-0 px-6 z-20">
+        <div className="max-w-7xl mx-auto">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -26,32 +73,68 @@ export default function Process() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="mt-4 font-display text-4xl md:text-6xl font-semibold tracking-tight"
+            className="mt-3 font-display text-3xl md:text-5xl font-semibold tracking-tight"
           >
-            Five phases.<br />
+            Five phases.{" "}
             <span className="text-gradient">Measured every Friday.</span>
           </motion.h2>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {phases.map((p, i) => (
-            <motion.div
-              key={p.n}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="glass glass-hover rounded-3xl p-6 flex flex-col h-full"
-            >
-              <div className="flex items-baseline justify-between">
-                <span className="font-display text-3xl font-semibold text-gradient">{p.n}</span>
-                <span className="text-[10px] tracking-widest uppercase text-muted-foreground">{p.when}</span>
+      {/* horizontal track */}
+      <div className="absolute inset-0 flex items-center">
+        <div
+          ref={trackRef}
+          className="flex gap-8 pl-12 md:pl-24 pr-[50vw] will-change-transform"
+        >
+          {phases.map((p, i) => {
+            const isActive = i === active;
+            return (
+              <div
+                key={p.n}
+                data-phase-card
+                className={`shrink-0 w-[78vw] sm:w-[520px] md:w-[600px] h-[62vh] md:h-[520px] rounded-[2rem] p-8 md:p-12 flex flex-col justify-between glass transition-all duration-500 ease-out ${
+                  isActive
+                    ? "opacity-100 scale-100 border-foreground/30 shadow-2xl"
+                    : "opacity-40 scale-[0.92]"
+                }`}
+              >
+                <div className="flex items-baseline justify-between">
+                  <span
+                    className={`font-display text-6xl md:text-8xl font-semibold transition-colors duration-500 ${
+                      isActive ? "text-gradient" : "text-muted-foreground/60"
+                    }`}
+                  >
+                    {p.n}
+                  </span>
+                  <span className="text-[10px] md:text-xs tracking-widest uppercase text-muted-foreground">
+                    {p.when}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-display text-4xl md:text-6xl font-semibold tracking-tight">
+                    {p.t}
+                  </h3>
+                  <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed max-w-md">
+                    {p.d}
+                  </p>
+                </div>
               </div>
-              <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">{p.t}</h3>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{p.d}</p>
-            </motion.div>
-          ))}
+            );
+          })}
         </div>
+      </div>
+
+      {/* progress indicator */}
+      <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {phases.map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 rounded-full transition-all duration-500 ${
+              i === active ? "w-10 bg-foreground" : "w-1.5 bg-foreground/30"
+            }`}
+          />
+        ))}
       </div>
     </section>
   );
