@@ -2,52 +2,136 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import pendant from "@/assets/pendant.svg";
 
+/**
+ * HangingPendant — GSAP-driven "fluid" pendulum.
+ *
+ * The motion is modeled as a damped harmonic oscillator integrated on GSAP's
+ * ticker. A soft torque pulls the bob toward the cursor while damping bleeds
+ * energy so the swing settles like a viscous fluid rather than snapping.
+ * The string is a chain of segments that follow the bob with easing, giving
+ * the rope a rippling, liquid trail.
+ */
 export default function HangingPendant() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const swingRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
+  const ropeRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
 
-  // GSAP-driven swing toward cursor with spring easing
   useEffect(() => {
     const swing = swingRef.current;
-    if (!swing) return;
+    const wrap = wrapRef.current;
+    const rope = ropeRef.current;
+    if (!swing || !wrap || !rope) return;
 
-    const setRot = gsap.quickTo(swing, "rotation", {
-      duration: 1.1,
-      ease: "elastic.out(1, 0.35)",
-    });
+    // --- Rope segments (fluid trail) ---
+    const SEG_COUNT = 12;
+    const segments: HTMLDivElement[] = [];
+    rope.innerHTML = "";
+    for (let i = 0; i < SEG_COUNT; i++) {
+      const s = document.createElement("div");
+      const t = i / (SEG_COUNT - 1);
+      s.style.cssText = `
+        position:absolute;
+        top:${t * 40}px;
+        left:50%;
+        width:${1.2 - t * 0.4}px;
+        height:${40 / SEG_COUNT + 1}px;
+        margin-left:${-(1.2 - t * 0.4) / 2}px;
+        background:linear-gradient(to bottom, rgba(255,255,255,${0.5 - t * 0.35}), rgba(255,255,255,${0.35 - t * 0.25}));
+        border-radius:2px;
+        transform-origin:top center;
+        will-change:transform;
+      `;
+      rope.appendChild(s);
+      segments.push(s);
+    }
 
+    // --- Physics state ---
+    const state = {
+      angle: 0, // deg
+      velocity: 0, // deg/s
+      target: 0, // deg (cursor-derived rest target)
+    };
+
+    const setBob = gsap.quickSetter(swing, "rotation", "deg");
+    // per-segment setters for fluid lag
+    const segAngles = new Array(SEG_COUNT).fill(0);
+    const segSetters = segments.map((s) =>
+      gsap.quickSetter(s, "rotation", "deg"),
+    );
+
+    // Damped spring integrator (fluid feel: low stiffness, high damping)
+    const STIFFNESS = 42; // pull strength toward target
+    const DAMPING = 3.6; // viscosity
+    const MAX_DT = 1 / 30;
+
+    const tick = (_time: number, deltaMS: number) => {
+      const dt = Math.min(deltaMS / 1000, MAX_DT);
+      // spring toward target
+      const accel =
+        -STIFFNESS * (state.angle - state.target) - DAMPING * state.velocity;
+      state.velocity += accel * dt;
+      state.angle += state.velocity * dt;
+
+      setBob(state.angle);
+
+      // rope segments follow with progressive lag → fluid ripple
+      for (let i = 0; i < SEG_COUNT; i++) {
+        const follow = 0.18 + (i / SEG_COUNT) * 0.55; // top responds slower, bottom faster
+        segAngles[i] += (state.angle - segAngles[i]) * follow;
+        // slight sinusoidal offset for wave-like flow
+        const wave =
+          Math.sin(_time / 380 + i * 0.55) * 0.6 * (i / SEG_COUNT);
+        segSetters[i](segAngles[i] + wave);
+      }
+    };
+
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(500, 33);
+
+    // --- Cursor influence ---
     let raf = 0;
-    const handleMove = (e: MouseEvent) => {
+    const onMove = (e: MouseEvent) => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        const el = wrapRef.current;
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
+        const rect = wrap.getBoundingClientRect();
         const pivotX = rect.left + rect.width / 2;
         const pivotY = rect.top;
         const dx = e.clientX - pivotX;
-        const dy = Math.max(e.clientY - pivotY, 1);
+        const dy = Math.max(e.clientY - pivotY, 40);
         const deg = Math.atan2(dx, dy) * (180 / Math.PI);
-        setRot(Math.max(-45, Math.min(45, -deg * 0.7)));
+        // clamp + soften
+        state.target = Math.max(-38, Math.min(38, -deg * 0.55));
       });
     };
-    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mousemove", onMove);
 
-    // idle pendulum breathing
-    const idle = gsap.to(swing, {
-      rotation: "+=3",
-      duration: 2.4,
-      yoyo: true,
+    // idle drift: gently move target so pendulum breathes when cursor idle
+    const drift = gsap.to(state, {
+      target: "+=0",
+      duration: 0,
+      onUpdate: () => {},
+    });
+    const idle = gsap.to(state, {
+      duration: 3.4,
       repeat: -1,
+      yoyo: true,
       ease: "sine.inOut",
+      onUpdate: function () {
+        // only nudge when cursor idle (target near zero)
+        if (Math.abs(state.target) < 2) {
+          state.target = Math.sin(performance.now() / 1400) * 4;
+        }
+      },
     });
 
     return () => {
-      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mousemove", onMove);
       cancelAnimationFrame(raf);
+      gsap.ticker.remove(tick);
       idle.kill();
+      drift.kill();
     };
   }, []);
 
@@ -56,9 +140,13 @@ export default function HangingPendant() {
     const img = imgRef.current;
     if (!img) return;
     const onEnter = () =>
-      gsap.to(img, { width: 120, duration: 0.4, ease: "back.out(2)" });
+      gsap.to(img, {
+        width: 122,
+        duration: 0.55,
+        ease: "elastic.out(1, 0.5)",
+      });
     const onLeave = () =>
-      gsap.to(img, { width: 100, duration: 0.4, ease: "power3.out" });
+      gsap.to(img, { width: 100, duration: 0.5, ease: "power3.out" });
     img.addEventListener("mouseenter", onEnter);
     img.addEventListener("mouseleave", onLeave);
     return () => {
@@ -91,13 +179,9 @@ export default function HangingPendant() {
     >
       <div ref={swingRef} style={{ transformOrigin: "top center" }}>
         <div
-          className="mx-auto"
-          style={{
-            width: 1,
-            height: 40,
-            background:
-              "linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1))",
-          }}
+          ref={ropeRef}
+          className="mx-auto relative"
+          style={{ width: 2, height: 40 }}
         />
         <img
           ref={imgRef}
