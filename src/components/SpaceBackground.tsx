@@ -88,35 +88,26 @@ export default function SpaceBackground() {
 
 
       // Aurora blobs slow drift with scroll
+      const auroraST = (scrub: number) => ({
+        start: 0,
+        end: () => ScrollTrigger.maxScroll(window),
+        scrub,
+        invalidateOnRefresh: true,
+      });
       gsap.to("[data-space-aurora-1]", {
         xPercent: 20,
         yPercent: -15,
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
+        scrollTrigger: auroraST(1.5),
       });
       gsap.to("[data-space-aurora-2]", {
         xPercent: -18,
         yPercent: 18,
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
+        scrollTrigger: auroraST(1.5),
       });
       gsap.to("[data-space-aurora-3]", {
         xPercent: 14,
         yPercent: 20,
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 2,
-        },
+        scrollTrigger: auroraST(2),
       });
 
       // Twinkle
