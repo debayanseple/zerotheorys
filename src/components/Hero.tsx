@@ -11,7 +11,7 @@ const stats = [
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative w-full overflow-hidden">
+  <section id="hero" className="relative w-full overflow-hidden bg-[var(--background)]">
       <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-radial)" }} />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-10 md:pt-20 lg:pt-20 min-h-screen flex flex-col justify-center">
