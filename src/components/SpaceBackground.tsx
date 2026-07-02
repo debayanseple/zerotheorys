@@ -43,20 +43,21 @@ export default function SpaceBackground() {
     let blurRafId = 0;
     const ctx = gsap.context(() => {
 
-      // Parallax star layers — driven directly by scroll progress so pinned
-      // sections (which extend scrollHeight after mount) don't cap the range.
+      // Infinite scrolling star layers — each layer is two stacked tiles
+      // (0..100vh and 100..200vh) that we translate by -(scrollY * speed) mod
+      // viewport height, producing an endless "flying through space" feel.
       const starLayerEls = gsap.utils.toArray<HTMLElement>("[data-space-layer]");
       const layerSetters = starLayerEls.map((layer) => {
         const depth = parseFloat(layer.dataset.depth || "0.3");
         return {
           depth,
-          setY: gsap.quickSetter(layer, "yPercent") as (v: number) => void,
+          el: layer,
+          setY: gsap.quickSetter(layer, "y", "px") as (v: number) => void,
         };
       });
 
       // Scroll-velocity motion blur on star layers
-      const starLayers = gsap.utils.toArray<HTMLElement>("[data-space-layer]");
-      const blurSetters = starLayers.map((el) => {
+      const blurSetters = starLayerEls.map((el) => {
         const depth = parseFloat(el.dataset.depth || "0.3");
         const setStretch = gsap.quickTo(el, "scaleY", {
           duration: 0.35,
@@ -64,7 +65,6 @@ export default function SpaceBackground() {
         });
         return { depth, setStretch, el };
       });
-
 
       let lastScroll = window.scrollY;
       let lastTime = performance.now();
@@ -79,12 +79,12 @@ export default function SpaceBackground() {
         lastScroll = y;
         lastTime = now;
 
-        // Live scroll-driven parallax (immune to trigger end caching)
-        const doc = document.documentElement;
-        const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
-        const progress = Math.min(1, Math.max(0, y / maxScroll));
+        // Infinite scroll: translate each layer by scrollY * speed, wrap by vh.
+        const vh = window.innerHeight;
         layerSetters.forEach(({ depth, setY }) => {
-          setY(-depth * 60 * progress);
+          const speed = 0.35 + depth * 1.1; // deeper = faster
+          const offset = ((y * speed) % vh + vh) % vh;
+          setY(-offset);
         });
 
         const base = Math.min(Math.abs(smoothedVel) / 220, 12);
