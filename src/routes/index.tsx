@@ -38,6 +38,7 @@ function Index() {
       <Process />
       <CaseStudies />
       <Manifesto />
+      <Founders />
       <Stats />
       <Security />
       <CTA />
