@@ -107,7 +107,7 @@ export default function CaseStudies() {
   }, []);
 
   return (
-    <section id="work" ref={sectionRef} className="relative py-32 px-6">
+    <section id="work" ref={sectionRef} data-no-fx className="relative py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mb-16">
           <p
