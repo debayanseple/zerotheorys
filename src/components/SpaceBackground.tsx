@@ -62,16 +62,13 @@ export default function SpaceBackground() {
       const starLayers = gsap.utils.toArray<HTMLElement>("[data-space-layer]");
       const blurSetters = starLayers.map((el) => {
         const depth = parseFloat(el.dataset.depth || "0.3");
-        const setBlur = gsap.quickTo(el, "--star-blur", {
-          duration: 0.35,
-          ease: "power2.out",
-        });
         const setStretch = gsap.quickTo(el, "scaleY", {
           duration: 0.35,
           ease: "power2.out",
         });
-        return { depth, setBlur, setStretch, el };
+        return { depth, setStretch, el };
       });
+
 
       const tick = () => {
         const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity());
