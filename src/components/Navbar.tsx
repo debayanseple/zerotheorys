@@ -31,7 +31,7 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      initial={{ y: grey: -40, opacity: 0 }}
+      initial={{ y: -40, opacity: 0 }}
       animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0 : 1 }}
       transition={{ duration: 0.35, ease: "easeInOut" }}
       className="fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[min(92vw,1100px)]"
