@@ -40,7 +40,9 @@ export default function SpaceBackground() {
     const root = rootRef.current;
     if (!root) return;
 
+    let blurRafId = 0;
     const ctx = gsap.context(() => {
+
       // Parallax star layers driven by page scroll
       gsap.utils.toArray<HTMLElement>("[data-space-layer]").forEach((layer) => {
         const depth = parseFloat(layer.dataset.depth || "0.3");
