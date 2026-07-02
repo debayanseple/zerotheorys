@@ -73,22 +73,19 @@ export default function SpaceBackground() {
         return { depth, setBlur, setStretch, el };
       });
 
-      let rafId = 0;
       const tick = () => {
-        const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity()); // px/s
-        // Map velocity → blur px. Deeper layers blur more (they're "faster").
-        const base = Math.min(v / 220, 12); // cap
-        blurSetters.forEach(({ depth, setBlur, setStretch, el }) => {
+        const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity());
+        const base = Math.min(v / 220, 12);
+        blurSetters.forEach(({ depth, setStretch, el }) => {
           const b = base * (0.5 + depth);
-          el.style.setProperty("--star-blur", `${b}px`);
           el.style.filter = `blur(${b}px)`;
-          // Slight vertical stretch to sell motion smear
           const stretch = 1 + Math.min(b / 40, 0.18);
           setStretch(stretch);
         });
-        rafId = requestAnimationFrame(tick);
+        blurRafId = requestAnimationFrame(tick);
       };
-      rafId = requestAnimationFrame(tick);
+      blurRafId = requestAnimationFrame(tick);
+
 
 
 
