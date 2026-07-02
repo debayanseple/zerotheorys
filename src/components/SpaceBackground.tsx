@@ -43,19 +43,15 @@ export default function SpaceBackground() {
     let blurRafId = 0;
     const ctx = gsap.context(() => {
 
-      // Parallax star layers driven by page scroll
-      gsap.utils.toArray<HTMLElement>("[data-space-layer]").forEach((layer) => {
+      // Parallax star layers — driven directly by scroll progress so pinned
+      // sections (which extend scrollHeight after mount) don't cap the range.
+      const starLayerEls = gsap.utils.toArray<HTMLElement>("[data-space-layer]");
+      const layerSetters = starLayerEls.map((layer) => {
         const depth = parseFloat(layer.dataset.depth || "0.3");
-        gsap.to(layer, {
-          yPercent: -depth * 60,
-          ease: "none",
-          scrollTrigger: {
-            start: 0,
-            end: () => ScrollTrigger.maxScroll(window),
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
+        return {
+          depth,
+          setY: gsap.quickSetter(layer, "yPercent") as (v: number) => void,
+        };
       });
 
       // Scroll-velocity motion blur on star layers
