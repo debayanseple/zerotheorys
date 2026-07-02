@@ -78,18 +78,29 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-            className="flex justify-center lg:justify-end"
+            className="relative flex justify-center lg:justify-end"
           >
+            {/* Soft sunlight glow from top */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[120%] h-[70%] -z-10"
+              style={{
+                background:
+                  "radial-gradient(ellipse 55% 65% at 50% 0%, rgba(255,214,170,0.55), rgba(236,170,255,0.28) 35%, rgba(139,92,246,0.15) 60%, transparent 75%)",
+                filter: "blur(40px)",
+              }}
+            />
             <img
               src={heroImage}
               alt="Zero Theorys hero illustration"
               draggable={false}
-              className="w-full max-w-xs md:max-w-sm lg:max-w-md h-auto object-contain select-none"
+              className="relative w-full max-w-xs md:max-w-sm lg:max-w-md h-auto object-contain select-none"
               style={{
                 filter: "drop-shadow(0 20px 60px rgba(0,0,0,0.5))",
               }}
             />
           </motion.div>
+
         </div>
 
         {/* Stats row */}
