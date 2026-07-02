@@ -66,20 +66,31 @@ export default function SpaceBackground() {
       });
 
 
+      let lastScroll = window.scrollY;
+      let lastTime = performance.now();
+      let smoothedVel = 0;
+
       const tick = () => {
+        const now = performance.now();
+        const y = window.scrollY;
+        const dt = Math.max(1, now - lastTime);
+        const inst = ((y - lastScroll) / dt) * 1000; // px/s
+        smoothedVel = smoothedVel * 0.75 + inst * 0.25;
+        lastScroll = y;
+        lastTime = now;
+
         // Live scroll-driven parallax (immune to trigger end caching)
         const doc = document.documentElement;
         const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
-        const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+        const progress = Math.min(1, Math.max(0, y / maxScroll));
         layerSetters.forEach(({ depth, setY }) => {
           setY(-depth * 60 * progress);
         });
 
-        const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity());
-        const base = Math.min(v / 220, 12);
+        const base = Math.min(Math.abs(smoothedVel) / 220, 12);
         blurSetters.forEach(({ depth, setStretch, el }) => {
           const b = base * (0.5 + depth);
-          el.style.filter = `blur(${b}px)`;
+          el.style.filter = b > 0.05 ? `blur(${b}px)` : "";
           const stretch = 1 + Math.min(b / 40, 0.18);
           setStretch(stretch);
         });
