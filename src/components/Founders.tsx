@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import debayanAsset from "@/assets/debayan.png.asset.json";
+import ganeshAsset from "@/assets/ganesh.png.asset.json";
 
 const founders = [
   {
@@ -11,7 +12,7 @@ const founders = [
   {
     name: "Ganesh Singha",
     role: "Full-Stack Engineer",
-    image: "/founders/aniket.jpg",
+    image: ganeshAsset.url,
     initials: "GS",
   },
   {
