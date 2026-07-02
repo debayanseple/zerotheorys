@@ -91,8 +91,13 @@ export default function ScrollFX() {
       ScrollTrigger.refresh();
     });
 
-    return () => ctx.revert();
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      ctx.revert();
+    };
   }, []);
+
 
   return (
     <div
