@@ -286,31 +286,39 @@ export default function SpaceBackground() {
         }}
       />
 
-      {/* Star layers */}
+      {/* Star layers — two stacked tiles per layer for seamless infinite scroll */}
       {layers.map((layer, li) => (
         <div
           key={li}
           data-space-layer
           data-depth={layer.depth}
-          className="absolute inset-0 will-change-transform"
-          style={{ height: "140%" }}
+          className="absolute inset-x-0 top-0 will-change-transform"
+          style={{ height: "200vh" }}
         >
-          {layer.stars.map((s, i) => (
-            <span
-              key={i}
-              data-space-star
-              className="absolute rounded-full bg-white"
-              style={{
-                left: `${s.x}%`,
-                top: `${s.y}%`,
-                width: `${s.r * layer.size}px`,
-                height: `${s.r * layer.size}px`,
-                opacity: s.o,
-                boxShadow: layer.glow
-                  ? "0 0 8px rgba(168,85,247,0.7)"
-                  : "0 0 2px rgba(255,255,255,0.4)",
-              }}
-            />
+          {[0, 1].map((tile) => (
+            <div
+              key={tile}
+              className="absolute inset-x-0"
+              style={{ top: `${tile * 100}vh`, height: "100vh" }}
+            >
+              {layer.stars.map((s, i) => (
+                <span
+                  key={i}
+                  data-space-star
+                  className="absolute rounded-full bg-white"
+                  style={{
+                    left: `${s.x}%`,
+                    top: `${s.y}%`,
+                    width: `${s.r * layer.size}px`,
+                    height: `${s.r * layer.size}px`,
+                    opacity: s.o,
+                    boxShadow: layer.glow
+                      ? "0 0 8px rgba(168,85,247,0.7)"
+                      : "0 0 2px rgba(255,255,255,0.4)",
+                  }}
+                />
+              ))}
+            </div>
           ))}
         </div>
       ))}
