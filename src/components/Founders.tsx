@@ -1,10 +1,11 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import debayanAsset from "@/assets/debayan.png.asset.json";
 
 const founders = [
   {
     name: "Debayan Chakraborty",
     role: "UI / UX & Graphic Designer",
-    image: "/founders/debayan.jpg",
+    image: debayanAsset.url,
     initials: "DC",
   },
   {
@@ -22,6 +23,8 @@ const founders = [
 ];
 
 export default function Founders() {
+  const reduce = useReducedMotion();
+
   return (
     <section id="founders" className="relative py-32 px-6">
       <div className="max-w-6xl mx-auto">
@@ -58,10 +61,20 @@ export default function Founders() {
           {founders.map((f, i) => (
             <motion.div
               key={f.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 + 0.2 }}
+              data-no-fx
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 80, scale: 0.94, filter: "blur(12px)" }}
+              whileInView={
+                reduce
+                  ? { opacity: 1 }
+                  : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
+              }
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{
+                duration: 1.1,
+                delay: i * 0.18,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              whileHover={reduce ? undefined : { y: -6, transition: { duration: 0.4, ease: "easeOut" } }}
             >
               <div className="glass rounded-3xl p-6 md:p-8 glass-hover group">
                 <div className="relative mx-auto w-40 h-52 md:w-48 md:h-64 rounded-2xl overflow-hidden mb-6">
