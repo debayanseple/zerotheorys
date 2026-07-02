@@ -8,6 +8,7 @@ import Manifesto from "@/components/Manifesto";
 import Stats from "@/components/Stats";
 import Security from "@/components/Security";
 import CTA from "@/components/CTA";
+import Founders from "@/components/Founders";
 import HangingPendant from "@/components/HangingPendant";
 import ScrollFX from "@/components/ScrollFX";
 
@@ -37,6 +38,7 @@ function Index() {
       <Process />
       <CaseStudies />
       <Manifesto />
+      <Founders />
       <Stats />
       <Security />
       <CTA />
