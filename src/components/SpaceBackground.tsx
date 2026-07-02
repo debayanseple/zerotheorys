@@ -43,19 +43,15 @@ export default function SpaceBackground() {
     let blurRafId = 0;
     const ctx = gsap.context(() => {
 
-      // Parallax star layers driven by page scroll
-      gsap.utils.toArray<HTMLElement>("[data-space-layer]").forEach((layer) => {
+      // Parallax star layers — driven directly by scroll progress so pinned
+      // sections (which extend scrollHeight after mount) don't cap the range.
+      const starLayerEls = gsap.utils.toArray<HTMLElement>("[data-space-layer]");
+      const layerSetters = starLayerEls.map((layer) => {
         const depth = parseFloat(layer.dataset.depth || "0.3");
-        gsap.to(layer, {
-          yPercent: -depth * 60,
-          ease: "none",
-          scrollTrigger: {
-            trigger: document.documentElement,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true,
-          },
-        });
+        return {
+          depth,
+          setY: gsap.quickSetter(layer, "yPercent") as (v: number) => void,
+        };
       });
 
       // Scroll-velocity motion blur on star layers
@@ -70,12 +66,31 @@ export default function SpaceBackground() {
       });
 
 
+      let lastScroll = window.scrollY;
+      let lastTime = performance.now();
+      let smoothedVel = 0;
+
       const tick = () => {
-        const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity());
-        const base = Math.min(v / 220, 12);
+        const now = performance.now();
+        const y = window.scrollY;
+        const dt = Math.max(1, now - lastTime);
+        const inst = ((y - lastScroll) / dt) * 1000; // px/s
+        smoothedVel = smoothedVel * 0.75 + inst * 0.25;
+        lastScroll = y;
+        lastTime = now;
+
+        // Live scroll-driven parallax (immune to trigger end caching)
+        const doc = document.documentElement;
+        const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+        const progress = Math.min(1, Math.max(0, y / maxScroll));
+        layerSetters.forEach(({ depth, setY }) => {
+          setY(-depth * 60 * progress);
+        });
+
+        const base = Math.min(Math.abs(smoothedVel) / 220, 12);
         blurSetters.forEach(({ depth, setStretch, el }) => {
           const b = base * (0.5 + depth);
-          el.style.filter = `blur(${b}px)`;
+          el.style.filter = b > 0.05 ? `blur(${b}px)` : "";
           const stretch = 1 + Math.min(b / 40, 0.18);
           setStretch(stretch);
         });
@@ -88,35 +103,26 @@ export default function SpaceBackground() {
 
 
       // Aurora blobs slow drift with scroll
+      const auroraST = (scrub: number) => ({
+        start: 0,
+        end: () => ScrollTrigger.maxScroll(window),
+        scrub,
+        invalidateOnRefresh: true,
+      });
       gsap.to("[data-space-aurora-1]", {
         xPercent: 20,
         yPercent: -15,
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
+        scrollTrigger: auroraST(1.5),
       });
       gsap.to("[data-space-aurora-2]", {
         xPercent: -18,
         yPercent: 18,
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
+        scrollTrigger: auroraST(1.5),
       });
       gsap.to("[data-space-aurora-3]", {
         xPercent: 14,
         yPercent: 20,
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 2,
-        },
+        scrollTrigger: auroraST(2),
       });
 
       // Twinkle
