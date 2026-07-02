@@ -9,7 +9,7 @@ const founders = [
   },
   {
     name: "Ganesh Singha",
-    role: "Full-Stack Engineer & Systems Architect",
+    role: "Full-Stack Engineer",
     image: "/founders/ganesh.jpg",
     initials: "GS",
   },
