@@ -67,6 +67,13 @@ export default function SpaceBackground() {
 
 
       const tick = () => {
+        // Live scroll-driven parallax (immune to trigger end caching)
+        const maxScroll = ScrollTrigger.maxScroll(window) || 1;
+        const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+        layerSetters.forEach(({ depth, setY }) => {
+          setY(-depth * 60 * progress);
+        });
+
         const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity());
         const base = Math.min(v / 220, 12);
         blurSetters.forEach(({ depth, setStretch, el }) => {
