@@ -50,10 +50,10 @@ export default function SpaceBackground() {
           yPercent: -depth * 60,
           ease: "none",
           scrollTrigger: {
-            trigger: document.documentElement,
-            start: "top top",
-            end: "bottom bottom",
+            start: 0,
+            end: () => ScrollTrigger.maxScroll(window),
             scrub: true,
+            invalidateOnRefresh: true,
           },
         });
       });
