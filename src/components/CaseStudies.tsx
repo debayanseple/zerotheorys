@@ -1,4 +1,8 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const studies = [
   {
@@ -31,38 +35,112 @@ const studies = [
 ];
 
 export default function CaseStudies() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Eyebrow + heading reveal
+      gsap.from("[data-cs-eyebrow]", {
+        y: 30,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      gsap.from("[data-cs-heading]", {
+        y: 50,
+        opacity: 0,
+        duration: 1.1,
+        ease: "power3.out",
+        delay: 0.1,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // Cards — staggered scroll-linked entry
+      const cards = gsap.utils.toArray<HTMLElement>("[data-cs-card]");
+      gsap.from(cards, {
+        y: 100,
+        opacity: 0,
+        scale: 0.92,
+        rotateX: 8,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: cards[0],
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // Metrics count-in
+      gsap.from("[data-cs-metric]", {
+        y: 20,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power2.out",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: cards[0],
+          start: "top 70%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // Subtle parallax lift while section is in view
+      cards.forEach((card, i) => {
+        gsap.to(card, {
+          y: -30 - i * 10,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1.2,
+          },
+        });
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="work" className="relative py-32 px-6">
+    <section id="work" ref={sectionRef} className="relative py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mb-16">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <p
+            data-cs-eyebrow
             className="text-xs tracking-[0.3em] uppercase text-muted-foreground"
           >
             Selected work
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+          </p>
+          <h2
+            data-cs-heading
             className="mt-4 font-display text-4xl md:text-6xl font-semibold tracking-tight"
           >
             Outcomes, <span className="text-gradient">not output.</span>
-          </motion.h2>
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {studies.map((s, i) => (
-            <motion.article
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 [perspective:1200px]">
+          {studies.map((s) => (
+            <article
               key={s.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="glass glass-hover rounded-3xl p-8 flex flex-col"
+              data-cs-card
+              className="glass glass-hover rounded-3xl p-8 flex flex-col will-change-transform"
             >
               <span className="text-[10px] tracking-widest uppercase text-muted-foreground">
                 {s.tag}
@@ -75,7 +153,7 @@ export default function CaseStudies() {
               </p>
               <div className="mt-8 grid grid-cols-2 gap-4 pt-6 border-t border-white/5">
                 {s.metrics.map((m) => (
-                  <div key={m.l}>
+                  <div key={m.l} data-cs-metric>
                     <div className="font-display text-2xl font-semibold text-gradient">
                       {m.v}
                     </div>
@@ -85,7 +163,7 @@ export default function CaseStudies() {
                   </div>
                 ))}
               </div>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>
