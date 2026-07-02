@@ -237,7 +237,11 @@ export default function SpaceBackground() {
       };
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      cancelAnimationFrame(blurRafId);
+      ctx.revert();
+    };
+
   }, []);
 
   return (
