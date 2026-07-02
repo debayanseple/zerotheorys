@@ -35,9 +35,11 @@ export default function ScrollFX() {
 
       // Section headings — subtle scroll-linked lift
       gsap.utils.toArray<HTMLElement>("section h2").forEach((h) => {
+        if (h.closest("[data-no-fx]")) return;
         gsap.from(h, {
           y: 40,
           opacity: 0,
+
           duration: 0.9,
           ease: "power3.out",
           scrollTrigger: {
@@ -50,7 +52,9 @@ export default function ScrollFX() {
 
       // Glass cards — stagger on enter, scale-linked while in view
       gsap.utils.toArray<HTMLElement>("section .glass").forEach((card) => {
+        if (card.closest("[data-no-fx]")) return;
         gsap.fromTo(
+
           card,
           { y: 60, opacity: 0 },
           {

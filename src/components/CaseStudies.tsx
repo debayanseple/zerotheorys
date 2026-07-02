@@ -51,7 +51,7 @@ export default function CaseStudies() {
         scrollTrigger: {
           trigger: section,
           start: "top 80%",
-          toggleActions: "play none none reverse",
+          toggleActions: "play none none none",
         },
       });
 
@@ -64,61 +64,50 @@ export default function CaseStudies() {
         scrollTrigger: {
           trigger: section,
           start: "top 80%",
-          toggleActions: "play none none reverse",
+          toggleActions: "play none none none",
         },
       });
 
       // Cards — staggered scroll-linked entry
       const cards = gsap.utils.toArray<HTMLElement>("[data-cs-card]");
-      gsap.from(cards, {
-        y: 100,
-        opacity: 0,
-        scale: 0.92,
-        rotateX: 8,
-        duration: 1,
-        ease: "power3.out",
-        stagger: 0.15,
-        scrollTrigger: {
-          trigger: cards[0],
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      // Metrics count-in
-      gsap.from("[data-cs-metric]", {
-        y: 20,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power2.out",
-        stagger: 0.08,
-        scrollTrigger: {
-          trigger: cards[0],
-          start: "top 70%",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      // Subtle parallax lift while section is in view
-      cards.forEach((card, i) => {
-        gsap.to(card, {
-          y: -30 - i * 10,
-          ease: "none",
+      if (cards.length) {
+        gsap.from(cards, {
+          y: 80,
+          opacity: 0,
+          scale: 0.94,
+          rotateX: 6,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.15,
           scrollTrigger: {
-            trigger: section,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1.2,
+            trigger: cards[0],
+            start: "top 88%",
+            toggleActions: "play none none none",
           },
         });
-      });
+
+        gsap.from("[data-cs-metric]", {
+          y: 20,
+          opacity: 0,
+          duration: 0.7,
+          ease: "power2.out",
+          stagger: 0.08,
+          delay: 0.4,
+          scrollTrigger: {
+            trigger: cards[0],
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        });
+      }
+
     }, section);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="work" ref={sectionRef} className="relative py-32 px-6">
+    <section id="work" ref={sectionRef} data-no-fx className="relative py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-3xl mb-16">
           <p
