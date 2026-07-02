@@ -56,6 +56,42 @@ export default function SpaceBackground() {
         });
       });
 
+      // Scroll-velocity motion blur on star layers
+      const starLayers = gsap.utils.toArray<HTMLElement>("[data-space-layer]");
+      const blurSetters = starLayers.map((el) => {
+        const depth = parseFloat(el.dataset.depth || "0.3");
+        const setBlur = gsap.quickTo(el, "--star-blur", {
+          duration: 0.35,
+          ease: "power2.out",
+        });
+        const setStretch = gsap.quickTo(el, "scaleY", {
+          duration: 0.35,
+          ease: "power2.out",
+        });
+        return { depth, setBlur, setStretch, el };
+      });
+
+      let rafId = 0;
+      const tick = () => {
+        const v = Math.abs(ScrollTrigger.getVelocity()); // px/s
+        // Map velocity → blur px. Deeper layers blur more (they're "faster").
+        const base = Math.min(v / 220, 12); // cap
+        blurSetters.forEach(({ depth, setBlur, setStretch, el }) => {
+          const b = base * (0.5 + depth);
+          el.style.setProperty("--star-blur", `${b}px`);
+          el.style.filter = `blur(${b}px)`;
+          // Slight vertical stretch to sell motion smear
+          const stretch = 1 + Math.min(b / 40, 0.18);
+          setStretch(stretch);
+        });
+        rafId = requestAnimationFrame(tick);
+      };
+      rafId = requestAnimationFrame(tick);
+
+      return () => cancelAnimationFrame(rafId);
+    }, root);
+
+
       // Aurora blobs slow drift with scroll
       gsap.to("[data-space-aurora-1]", {
         xPercent: 20,
