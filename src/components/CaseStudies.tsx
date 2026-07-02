@@ -150,60 +150,8 @@ export default function CaseStudies() {
           );
         });
       }
-
-      // Parallax star layers — different speeds per depth
-      gsap.utils.toArray<HTMLElement>("[data-star-layer]").forEach((layer) => {
-        const depth = parseFloat(layer.dataset.depth || "0.3");
-        gsap.fromTo(
-          layer,
-          { yPercent: -depth * 30 },
-          {
-            yPercent: depth * 30,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
-      });
-
-      // Gentle drifting shimmer on stars (independent of scroll)
-      gsap.utils.toArray<HTMLElement>("[data-star]").forEach((s, i) => {
-        gsap.to(s, {
-          opacity: `+=${(i % 3) === 0 ? -0.3 : 0.2}`,
-          duration: 1.6 + (i % 5) * 0.4,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          delay: (i % 7) * 0.15,
-        });
-      });
-
-      // Aurora blob drift
-      gsap.to("[data-cs-blob-1]", {
-        xPercent: 12,
-        yPercent: -8,
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5,
-        },
-      });
-      gsap.to("[data-cs-blob-2]", {
-        xPercent: -14,
-        yPercent: 10,
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5,
-        },
-      });
     }, section);
+
 
     return () => ctx.revert();
   }, []);
