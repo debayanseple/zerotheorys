@@ -56,26 +56,12 @@ export default function SpaceBackground() {
         };
       });
 
-      // Scroll-velocity motion blur on star layers
-      const blurSetters = starLayerEls.map((el) => {
-        const depth = parseFloat(el.dataset.depth || "0.3");
-        const setStretch = gsap.quickTo(el, "scaleY", {
-          duration: 0.35,
-          ease: "power2.out",
-        });
-        return { depth, setStretch, el };
-      });
-
       let lastScroll = window.scrollY;
       let lastTime = performance.now();
-      let smoothedVel = 0;
 
       const tick = () => {
         const now = performance.now();
         const y = window.scrollY;
-        const dt = Math.max(1, now - lastTime);
-        const inst = ((y - lastScroll) / dt) * 1000; // px/s
-        smoothedVel = smoothedVel * 0.75 + inst * 0.25;
         lastScroll = y;
         lastTime = now;
 
@@ -87,13 +73,6 @@ export default function SpaceBackground() {
           setY(-offset);
         });
 
-        const base = Math.min(Math.abs(smoothedVel) / 220, 12);
-        blurSetters.forEach(({ depth, setStretch, el }) => {
-          const b = base * (0.5 + depth);
-          el.style.filter = b > 0.05 ? `blur(${b}px)` : "";
-          const stretch = 1 + Math.min(b / 40, 0.18);
-          setStretch(stretch);
-        });
         blurRafId = requestAnimationFrame(tick);
       };
       blurRafId = requestAnimationFrame(tick);
