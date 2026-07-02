@@ -150,60 +150,8 @@ export default function CaseStudies() {
           );
         });
       }
-
-      // Parallax star layers — different speeds per depth
-      gsap.utils.toArray<HTMLElement>("[data-star-layer]").forEach((layer) => {
-        const depth = parseFloat(layer.dataset.depth || "0.3");
-        gsap.fromTo(
-          layer,
-          { yPercent: -depth * 30 },
-          {
-            yPercent: depth * 30,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
-        );
-      });
-
-      // Gentle drifting shimmer on stars (independent of scroll)
-      gsap.utils.toArray<HTMLElement>("[data-star]").forEach((s, i) => {
-        gsap.to(s, {
-          opacity: `+=${(i % 3) === 0 ? -0.3 : 0.2}`,
-          duration: 1.6 + (i % 5) * 0.4,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          delay: (i % 7) * 0.15,
-        });
-      });
-
-      // Aurora blob drift
-      gsap.to("[data-cs-blob-1]", {
-        xPercent: 12,
-        yPercent: -8,
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5,
-        },
-      });
-      gsap.to("[data-cs-blob-2]", {
-        xPercent: -14,
-        yPercent: 10,
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5,
-        },
-      });
     }, section);
+
 
     return () => ctx.revert();
   }, []);
@@ -215,59 +163,8 @@ export default function CaseStudies() {
       data-no-fx
       className="relative py-32 px-6 overflow-hidden isolate"
     >
-      {/* Parallax starfield background */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        {/* Aurora blobs */}
-        <div
-          data-cs-blob-1
-          aria-hidden
-          className="absolute -top-32 -left-24 w-[520px] h-[520px] rounded-full opacity-30 blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(96,165,250,0.55), transparent 60%)",
-          }}
-        />
-        <div
-          data-cs-blob-2
-          aria-hidden
-          className="absolute -bottom-40 -right-24 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(168,85,247,0.5), transparent 60%)",
-          }}
-        />
-
-        {/* Star layers */}
-        {layers.map((layer, li) => (
-          <div
-            key={li}
-            data-star-layer
-            data-depth={layer.stars[0]?.d ?? 0.3}
-            className="absolute inset-0 will-change-transform"
-          >
-            {layer.stars.map((s, i) => (
-              <span
-                key={i}
-                data-star
-                className="absolute rounded-full bg-white"
-                style={{
-                  left: `${s.x}%`,
-                  top: `${s.y}%`,
-                  width: `${s.r * layer.size}px`,
-                  height: `${s.r * layer.size}px`,
-                  opacity: s.o,
-                  boxShadow:
-                    layer.size > 1.5
-                      ? "0 0 6px rgba(168,85,247,0.6)"
-                      : "0 0 3px rgba(255,255,255,0.4)",
-                }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-
       <div className="max-w-7xl mx-auto relative">
+
         <div className="max-w-3xl mb-16">
           <p
             data-cs-eyebrow
