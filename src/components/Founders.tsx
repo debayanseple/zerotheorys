@@ -11,13 +11,13 @@ const founders = [
   {
     name: "Ganesh Singha",
     role: "Full-Stack Engineer",
-    image: "/founders/ganesh.jpg",
+    image: "/founders/aniket.jpg",
     initials: "GS",
   },
   {
     name: "Aniket Karmakar",
     role: "Prompt & Loop Engineer",
-    image: "/founders/aniket.jpg",
+    image: "/founders/ganesh.jpg",
     initials: "AK",
   },
 ];
@@ -63,11 +63,7 @@ export default function Founders() {
               key={f.name}
               data-no-fx
               initial={reduce ? { opacity: 0 } : { opacity: 0, y: 80, scale: 0.94, filter: "blur(12px)" }}
-              whileInView={
-                reduce
-                  ? { opacity: 1 }
-                  : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
-              }
+              whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{
                 duration: 1.1,
