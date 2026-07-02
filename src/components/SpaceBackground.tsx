@@ -73,7 +73,7 @@ export default function SpaceBackground() {
 
       let rafId = 0;
       const tick = () => {
-        const v = Math.abs(ScrollTrigger.getVelocity()); // px/s
+        const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity()); // px/s
         // Map velocity → blur px. Deeper layers blur more (they're "faster").
         const base = Math.min(v / 220, 12); // cap
         blurSetters.forEach(({ depth, setBlur, setStretch, el }) => {
