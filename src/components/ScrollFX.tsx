@@ -52,7 +52,9 @@ export default function ScrollFX() {
 
       // Glass cards — stagger on enter, scale-linked while in view
       gsap.utils.toArray<HTMLElement>("section .glass").forEach((card) => {
+        if (card.closest("[data-no-fx]")) return;
         gsap.fromTo(
+
           card,
           { y: 60, opacity: 0 },
           {
