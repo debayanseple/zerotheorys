@@ -215,59 +215,8 @@ export default function CaseStudies() {
       data-no-fx
       className="relative py-32 px-6 overflow-hidden isolate"
     >
-      {/* Parallax starfield background */}
-      <div className="absolute inset-0 -z-10 pointer-events-none">
-        {/* Aurora blobs */}
-        <div
-          data-cs-blob-1
-          aria-hidden
-          className="absolute -top-32 -left-24 w-[520px] h-[520px] rounded-full opacity-30 blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(96,165,250,0.55), transparent 60%)",
-          }}
-        />
-        <div
-          data-cs-blob-2
-          aria-hidden
-          className="absolute -bottom-40 -right-24 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(168,85,247,0.5), transparent 60%)",
-          }}
-        />
-
-        {/* Star layers */}
-        {layers.map((layer, li) => (
-          <div
-            key={li}
-            data-star-layer
-            data-depth={layer.stars[0]?.d ?? 0.3}
-            className="absolute inset-0 will-change-transform"
-          >
-            {layer.stars.map((s, i) => (
-              <span
-                key={i}
-                data-star
-                className="absolute rounded-full bg-white"
-                style={{
-                  left: `${s.x}%`,
-                  top: `${s.y}%`,
-                  width: `${s.r * layer.size}px`,
-                  height: `${s.r * layer.size}px`,
-                  opacity: s.o,
-                  boxShadow:
-                    layer.size > 1.5
-                      ? "0 0 6px rgba(168,85,247,0.6)"
-                      : "0 0 3px rgba(255,255,255,0.4)",
-                }}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-
       <div className="max-w-7xl mx-auto relative">
+
         <div className="max-w-3xl mb-16">
           <p
             data-cs-eyebrow
