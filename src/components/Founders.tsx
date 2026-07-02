@@ -9,7 +9,7 @@ const founders = [
   },
   {
     name: "Ganesh Singha",
-    role: "Principal Full-Stack Engineer & Systems Architect",
+    role: "Full-Stack Engineer & Systems Architect",
     image: "/founders/ganesh.jpg",
     initials: "GS",
   },
@@ -77,9 +77,7 @@ export default function Founders() {
                 </div>
 
                 <div className="text-center">
-                  <h3 className="font-display text-xl md:text-2xl font-semibold tracking-tight">
-                    {f.name}
-                  </h3>
+                  <h3 className="font-display text-xl md:text-2xl font-semibold tracking-tight">{f.name}</h3>
                   <p className="mt-2 text-xs md:text-sm text-muted-foreground tracking-wide uppercase leading-relaxed">
                     {f.role}
                   </p>
