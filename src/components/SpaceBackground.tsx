@@ -40,7 +40,9 @@ export default function SpaceBackground() {
     const root = rootRef.current;
     if (!root) return;
 
+    let blurRafId = 0;
     const ctx = gsap.context(() => {
+
       // Parallax star layers driven by page scroll
       gsap.utils.toArray<HTMLElement>("[data-space-layer]").forEach((layer) => {
         const depth = parseFloat(layer.dataset.depth || "0.3");
@@ -55,6 +57,35 @@ export default function SpaceBackground() {
           },
         });
       });
+
+      // Scroll-velocity motion blur on star layers
+      const starLayers = gsap.utils.toArray<HTMLElement>("[data-space-layer]");
+      const blurSetters = starLayers.map((el) => {
+        const depth = parseFloat(el.dataset.depth || "0.3");
+        const setStretch = gsap.quickTo(el, "scaleY", {
+          duration: 0.35,
+          ease: "power2.out",
+        });
+        return { depth, setStretch, el };
+      });
+
+
+      const tick = () => {
+        const v = Math.abs((ScrollTrigger as unknown as { getVelocity: () => number }).getVelocity());
+        const base = Math.min(v / 220, 12);
+        blurSetters.forEach(({ depth, setStretch, el }) => {
+          const b = base * (0.5 + depth);
+          el.style.filter = `blur(${b}px)`;
+          const stretch = 1 + Math.min(b / 40, 0.18);
+          setStretch(stretch);
+        });
+        blurRafId = requestAnimationFrame(tick);
+      };
+      blurRafId = requestAnimationFrame(tick);
+
+
+
+
 
       // Aurora blobs slow drift with scroll
       gsap.to("[data-space-aurora-1]", {
@@ -206,7 +237,11 @@ export default function SpaceBackground() {
       };
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      cancelAnimationFrame(blurRafId);
+      ctx.revert();
+    };
+
   }, []);
 
   return (
