@@ -11,8 +11,15 @@ const stats = [
 
 export default function Hero() {
   return (
-  <section id="hero" className="relative w-full overflow-hidden bg-[var(--background)]">
-      <div className="absolute inset-0 -z-10" style={{ background: "var(--gradient-radial)" }} />
+  <section id="hero" className="relative w-full overflow-hidden" style={{ background: "#0a0514" }}>
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 70% 40%, rgba(139,92,246,0.35), transparent 60%), radial-gradient(ellipse 60% 50% at 20% 80%, rgba(88,28,135,0.4), transparent 70%), linear-gradient(180deg, #0a0514 0%, #150829 50%, #0a0514 100%)",
+        }}
+      />
+
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-10 md:pt-20 lg:pt-20 min-h-screen flex flex-col justify-center">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
