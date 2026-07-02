@@ -88,8 +88,7 @@ export default function SpaceBackground() {
       };
       rafId = requestAnimationFrame(tick);
 
-      return () => cancelAnimationFrame(rafId);
-    }, root);
+
 
 
       // Aurora blobs slow drift with scroll
