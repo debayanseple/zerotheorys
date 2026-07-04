@@ -25,10 +25,10 @@ export default function CTA() {
                 deliver it.
               </p>
               <a
-                href="mailto:hello.zerotheorys@gmail.com"
+                href="mailto:zerotheorys@gmail.com"
                 className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 bg-foreground text-background font-medium hover:opacity-90 transition"
               >
-                hello.zerotheorys@gmail.com →
+                zerotheorys@gmail.com →
               </a>
             </div>
 
