@@ -25,8 +25,13 @@ export default function CTA() {
                 deliver it.
               </p>
               <a
-                href="mailto:zerotheorys@gmail.com"
-                className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 bg-foreground text-background font-medium hover:opacity-90 transition"
+                href="mailto:zerotheorys@gmail.com?subject=New%20project%20inquiry&body=Hi%20Zero%20Theorys%20team%2C%0A%0AI%27d%20like%20to%20discuss%20a%20project."
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.location.href =
+                    "mailto:zerotheorys@gmail.com?subject=New%20project%20inquiry&body=Hi%20Zero%20Theorys%20team%2C%0A%0AI%27d%20like%20to%20discuss%20a%20project.";
+                }}
+                className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 bg-foreground text-background font-medium hover:opacity-90 transition cursor-pointer relative z-10"
               >
                 zerotheorys@gmail.com →
               </a>
@@ -34,8 +39,8 @@ export default function CTA() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { icon: Mail, label: "Email", value: "zerotheorys@gmail.com" },
-                { icon: Phone, label: "Phone", value: "+91 8001316145" },
+                { icon: Mail, label: "Email", value: "zerotheorys@gmail.com", href: "mailto:zerotheorys@gmail.com" },
+                { icon: Phone, label: "Phone", value: "+91 8001316145", href: "tel:+918001316145" },
                 { icon: MapPin, label: "Studio", value: "Anandapolly, Bapuji Nagar, Jadavpur, Near Sulekha, India" },
                 { icon: Clock, label: "Hours", value: "Mon–Sat · 09:00–19:00 IST" },
               ].map((c) => (
@@ -44,7 +49,13 @@ export default function CTA() {
                     <c.icon className="size-4" strokeWidth={1.5} />
                     <span className="text-[10px] tracking-widest uppercase">{c.label}</span>
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed">{c.value}</p>
+                  {c.href ? (
+                    <a href={c.href} className="mt-3 block text-sm leading-relaxed hover:text-foreground transition">
+                      {c.value}
+                    </a>
+                  ) : (
+                    <p className="mt-3 text-sm leading-relaxed">{c.value}</p>
+                  )}
                 </div>
               ))}
             </div>
