@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Headphones,
 } from "lucide-react";
+import LogoReveal from "./LogoReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
