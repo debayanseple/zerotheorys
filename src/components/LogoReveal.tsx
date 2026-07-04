@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import logoAsset from "@/assets/zerotheorys-logo.svg.asset.json";
+import logoAsset from "@/assets/Zero_Theorys_Logo.png.asset.json";
 
 /**
  * Zero Theorys logo reveal.
