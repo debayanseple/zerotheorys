@@ -25,8 +25,13 @@ export default function CTA() {
                 deliver it.
               </p>
               <a
-                href="mailto:zerotheorys@gmail.com"
-                className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 bg-foreground text-background font-medium hover:opacity-90 transition"
+                href="mailto:zerotheorys@gmail.com?subject=New%20project%20inquiry&body=Hi%20Zero%20Theorys%20team%2C%0A%0AI%27d%20like%20to%20discuss%20a%20project."
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.location.href =
+                    "mailto:zerotheorys@gmail.com?subject=New%20project%20inquiry&body=Hi%20Zero%20Theorys%20team%2C%0A%0AI%27d%20like%20to%20discuss%20a%20project.";
+                }}
+                className="mt-8 inline-flex items-center gap-2 rounded-full px-8 py-4 bg-foreground text-background font-medium hover:opacity-90 transition cursor-pointer relative z-10"
               >
                 zerotheorys@gmail.com →
               </a>
