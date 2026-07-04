@@ -1,14 +1,25 @@
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
-import type { MouseEvent } from "react";
+import { useRef, useState, type MouseEvent } from "react";
+import { Volume2, VolumeX } from "lucide-react";
 import debayanAsset from "@/assets/debayan.png.asset.json";
+import debayanVideoAsset from "@/assets/debayan.mp4.asset.json";
 import ganeshAsset from "@/assets/ganesh.png.asset.json";
 import aniketAsset from "@/assets/aniket.png.asset.json";
 
-const founders = [
+type Founder = {
+  name: string;
+  role: string;
+  image: string;
+  initials: string;
+  video?: string;
+};
+
+const founders: Founder[] = [
   {
     name: "Debayan Chakraborty",
     role: "UI / UX & Graphic Designer",
     image: debayanAsset.url,
+    video: debayanVideoAsset.url,
     initials: "DC",
   },
   {
@@ -25,7 +36,7 @@ const founders = [
   },
 ];
 
-function FounderCard({ f, i, reduce }: { f: (typeof founders)[number]; i: number; reduce: boolean | null }) {
+function FounderCard({ f, i, reduce }: { f: Founder; i: number; reduce: boolean | null }) {
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
   const gx = useMotionValue(50);
@@ -42,6 +53,10 @@ function FounderCard({ f, i, reduce }: { f: (typeof founders)[number]; i: number
       `radial-gradient(circle at ${x}% ${y}%, hsl(var(--primary) / 0.55), transparent 60%)`
   );
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+  const [hovering, setHovering] = useState(false);
+
   const handleMove = (e: MouseEvent<HTMLDivElement>) => {
     if (reduce) return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -53,11 +68,29 @@ function FounderCard({ f, i, reduce }: { f: (typeof founders)[number]; i: number
     gy.set(py * 100);
   };
 
+  const handleEnter = () => {
+    setHovering(true);
+    if (f.video && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
   const handleLeave = () => {
     rx.set(0);
     ry.set(0);
     gx.set(50);
     gy.set(0);
+    setHovering(false);
+    if (f.video && videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  const toggleMute = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setMuted((m) => !m);
   };
 
   return (
@@ -69,11 +102,11 @@ function FounderCard({ f, i, reduce }: { f: (typeof founders)[number]; i: number
       transition={{ duration: 1.1, delay: i * 0.18, ease: [0.22, 1, 0.36, 1] }}
       whileHover={reduce ? undefined : { y: -8, transition: { duration: 0.4, ease: "easeOut" } }}
       onMouseMove={handleMove}
+      onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       style={reduce ? undefined : { rotateX, rotateY, transformPerspective: 1000, transformStyle: "preserve-3d" }}
       className="relative"
     >
-      {/* Neon rim glow */}
       <motion.div
         aria-hidden
         style={reduce ? undefined : { background: glowBg }}
@@ -85,7 +118,6 @@ function FounderCard({ f, i, reduce }: { f: (typeof founders)[number]; i: number
                    hover:shadow-[0_0_60px_-10px_hsl(var(--primary)/0.55),0_0_120px_-40px_hsl(var(--primary)/0.4)]
                    hover:ring-1 hover:ring-primary/40"
       >
-        {/* Inner rim highlight following cursor */}
         <motion.div
           aria-hidden
           style={reduce ? undefined : { background: glowBg, mixBlendMode: "overlay" }}
@@ -102,9 +134,38 @@ function FounderCard({ f, i, reduce }: { f: (typeof founders)[number]; i: number
             width={384}
             height={512}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-105"
+            className={`w-full h-full object-cover transition-all duration-700 group-hover/card:scale-105 ${
+              f.video && hovering ? "opacity-0" : "opacity-100"
+            }`}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+          {f.video && (
+            <>
+              <video
+                ref={videoRef}
+                src={f.video}
+                muted={muted}
+                loop
+                playsInline
+                preload="metadata"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                  hovering ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={toggleMute}
+                aria-label={muted ? "Unmute video" : "Mute video"}
+                className={`absolute bottom-2 right-2 z-10 grid place-items-center w-9 h-9 rounded-full
+                            bg-background/60 backdrop-blur-md ring-1 ring-white/15
+                            text-foreground/90 hover:text-primary hover:ring-primary/50
+                            transition-all duration-300
+                            ${hovering ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"}`}
+              >
+                {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </button>
+            </>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent pointer-events-none" />
         </div>
 
         <div className="text-center relative" style={reduce ? undefined : { transform: "translateZ(24px)" }}>
