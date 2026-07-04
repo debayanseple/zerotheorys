@@ -132,16 +132,14 @@ export default function Services() {
         Our Services
       </div>
 
-      {/* center visual */}
+      {/* center visual — animated logo reveal */}
       <div
         data-center
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[240px] sm:size-[280px] md:size-[340px] rounded-3xl glass flex items-center justify-center will-change-transform"
       >
-        <div className="text-center px-6">
-          <div className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gradient">
-            Zero
-          </div>
-          <div className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight">
+        <LogoReveal />
+      </div>
+
             Theorys
           </div>
           <div className="mt-3 md:mt-4 text-[10px] tracking-[0.35em] uppercase text-muted-foreground">
