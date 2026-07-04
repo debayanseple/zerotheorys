@@ -58,7 +58,7 @@ export default function CTA() {
             <span className="size-2 rounded-full bg-gradient-to-br from-neon-blue to-neon-purple" />© 2026 Zero Theorys
             Pvt. Ltd.
           </div>
-          <div className="text-xs">Follow-the-sun support · Kolkata · London · NYC</div>
+          <div className="text-xs">Follow - Zero Theorys · Kolkata </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-foreground transition">
               Twitter
