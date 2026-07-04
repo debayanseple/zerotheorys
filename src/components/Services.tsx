@@ -140,13 +140,7 @@ export default function Services() {
         <LogoReveal />
       </div>
 
-            Theorys
-          </div>
-          <div className="mt-3 md:mt-4 text-[10px] tracking-[0.35em] uppercase text-muted-foreground">
-            Different disciplines · One standard of craft
-          </div>
-        </div>
-      </div>
+
 
       {/* steps overlay */}
       <div className="absolute inset-0">
