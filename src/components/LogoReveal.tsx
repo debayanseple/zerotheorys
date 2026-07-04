@@ -3,9 +3,8 @@ import logoAsset from "@/assets/Zero_Theorys_Logo.png.asset.json";
 
 /**
  * Zero Theorys logo reveal.
- * Renders the full SVG logo. A `.play` class (added by parent
- * Services section on scroll-into-view) triggers the entrance +
- * continuous shine/breathe loops.
+ * Renders the full logo. A `.play` class on this component or any ancestor
+ * triggers the entrance + continuous shine/breathe loops.
  */
 export default function LogoReveal() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -16,11 +15,11 @@ export default function LogoReveal() {
   }, []);
 
   return (
-    <div ref={rootRef} data-lockup className="zt-lockup relative w-[90%] aspect-square">
+    <div ref={rootRef} data-lockup className="zt-lockup relative w-full h-full p-3 sm:p-5">
       <img
         src={logoAsset.url}
         alt="Zero Theorys"
-        className="zt-logo absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
+        className="zt-logo w-full h-full object-contain select-none pointer-events-none"
         draggable={false}
       />
       <div className="zt-shine absolute inset-0 overflow-hidden pointer-events-none rounded-2xl" />
@@ -32,7 +31,8 @@ export default function LogoReveal() {
           filter: drop-shadow(0 0 0 rgba(34,211,238,0));
           will-change: transform, opacity, filter;
         }
-        .zt-lockup.play .zt-logo{
+        .zt-lockup.play .zt-logo,
+        .play .zt-lockup .zt-logo{
           animation:
             zt-logoIn 1.1s cubic-bezier(.2,1.2,.35,1) 0.05s forwards,
             zt-logoBreathe 4s ease-in-out 1.4s infinite;
@@ -48,7 +48,8 @@ export default function LogoReveal() {
         }
 
         .zt-shine{ opacity:0; }
-        .zt-lockup.play .zt-shine{ animation: zt-shineOn 0.3s linear 1s forwards; }
+        .zt-lockup.play .zt-shine,
+        .play .zt-lockup .zt-shine{ animation: zt-shineOn 0.3s linear 1s forwards; }
         @keyframes zt-shineOn{ to{ opacity:1; } }
         .zt-shine::after{
           content:"";
@@ -58,7 +59,8 @@ export default function LogoReveal() {
           background: linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent);
           transform: rotate(8deg);
         }
-        .zt-lockup.play .zt-shine::after{
+        .zt-lockup.play .zt-shine::after,
+        .play .zt-lockup .zt-shine::after{
           animation: zt-sweep 3.6s ease-in-out 1.4s infinite;
         }
         @keyframes zt-sweep{
@@ -69,8 +71,11 @@ export default function LogoReveal() {
 
         @media (prefers-reduced-motion: reduce){
           .zt-lockup.play .zt-logo,
+          .play .zt-lockup .zt-logo,
           .zt-lockup.play .zt-shine,
-          .zt-lockup.play .zt-shine::after{
+          .play .zt-lockup .zt-shine,
+          .zt-lockup.play .zt-shine::after,
+          .play .zt-lockup .zt-shine::after{
             animation: none !important;
             opacity: 1 !important;
             transform: none !important;
