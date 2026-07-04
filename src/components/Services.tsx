@@ -87,17 +87,11 @@ export default function Services() {
           scrub: 2,
           pin: true,
           anticipatePin: 1,
+          onEnter: () => centerEl?.classList.add("play"),
+          onEnterBack: () => centerEl?.classList.add("play"),
         },
       });
 
-      // subtle center pulse across the whole pin
-      if (centerEl) {
-        tl.to(
-          centerEl,
-          { scale: 1.06, rotate: 3, ease: "none", duration: stepEls.length },
-          0
-        );
-      }
 
       // transition between steps
       for (let i = 0; i < stepEls.length - 1; i++) {
