@@ -66,60 +66,115 @@ export default function Services() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const ctx = gsap.context(() => {
       const stepEls = gsap.utils.toArray<HTMLElement>("[data-step]");
       const centerEl = section.querySelector<HTMLElement>("[data-center]");
+      const logoEl = section.querySelector<HTMLElement>("[data-logo]");
+      const glowEl = section.querySelector<HTMLElement>("[data-glow]");
+      const shineEl = section.querySelector<HTMLElement>("[data-shine]");
 
-      // center card entrance + idle float
-      if (centerEl) {
-        gsap.set(centerEl, {
-          autoAlpha: 0,
-          scale: 0.7,
-          rotate: -6,
-          boxShadow: "0 0 0 rgba(34,211,238,0)",
-          transformOrigin: "50% 50%",
-        });
-      }
+      // ---- initial states ----
+      const resetCenter = () => {
+        if (centerEl)
+          gsap.set(centerEl, {
+            autoAlpha: 0,
+            scale: 0.7,
+            rotate: -6,
+            y: 0,
+            transformOrigin: "50% 50%",
+          });
+        if (logoEl)
+          gsap.set(logoEl, {
+            opacity: 0,
+            scale: 0.55,
+            rotate: -12,
+            y: 0,
+            filter: "drop-shadow(0 0 0 rgba(34,211,238,0)) blur(6px)",
+            transformOrigin: "50% 50%",
+          });
+        if (glowEl) gsap.set(glowEl, { opacity: 0, scale: 0.6 });
+        if (shineEl) gsap.set(shineEl, { xPercent: -180, opacity: 0, rotate: 12 });
+      };
+      resetCenter();
 
-      // init: hide all except first
       stepEls.forEach((el, i) => {
         const leftCard = el.querySelector<HTMLElement>("[data-side='left']");
         const rightCard = el.querySelector<HTMLElement>("[data-side='right']");
         gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 });
-        if (leftCard) gsap.set(leftCard, { x: i === 0 ? 0 : -120, autoAlpha: i === 0 ? 1 : 0, filter: i === 0 ? "blur(0px)" : "blur(8px)" });
-        if (rightCard) gsap.set(rightCard, { x: i === 0 ? 0 : 120, autoAlpha: i === 0 ? 1 : 0, filter: i === 0 ? "blur(0px)" : "blur(8px)" });
+        if (leftCard)
+          gsap.set(leftCard, {
+            x: i === 0 ? 0 : -120,
+            autoAlpha: i === 0 ? 1 : 0,
+            filter: i === 0 ? "blur(0px)" : "blur(8px)",
+          });
+        if (rightCard)
+          gsap.set(rightCard, {
+            x: i === 0 ? 0 : 120,
+            autoAlpha: i === 0 ? 1 : 0,
+            filter: i === 0 ? "blur(0px)" : "blur(8px)",
+          });
       });
 
-      const revealCenter = () => {
-        if (!centerEl) return;
-        centerEl.classList.add("play");
-        gsap.to(centerEl, {
-          autoAlpha: 1,
-          scale: 1,
-          rotate: 0,
-          duration: 1.1,
-          ease: "back.out(1.5)",
-          overwrite: "auto",
-        });
-        // idle float + tilt loop
-        gsap.to(centerEl, {
-          y: -10,
-          duration: 3.2,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          delay: 1,
-        });
-        gsap.to(centerEl, {
-          rotate: 1.5,
-          duration: 5,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          delay: 1,
-        });
+      // ---- idle loops (float, breathe, shine sweep) ----
+      const loops: gsap.core.Tween[] = [];
+      const startLoops = () => {
+        if (loops.length || reduce) return;
+        if (logoEl) {
+          loops.push(
+            gsap.to(logoEl, { y: -8, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1 })
+          );
+          loops.push(
+            gsap.to(logoEl, {
+              filter: "drop-shadow(0 0 36px rgba(59,91,255,0.55)) blur(0px)",
+              duration: 2.2,
+              ease: "sine.inOut",
+              yoyo: true,
+              repeat: -1,
+            })
+          );
+        }
+        if (glowEl) {
+          loops.push(
+            gsap.to(glowEl, {
+              scale: 1.12,
+              opacity: 0.95,
+              duration: 2.2,
+              ease: "sine.inOut",
+              yoyo: true,
+              repeat: -1,
+            })
+          );
+        }
+        if (centerEl) {
+          loops.push(
+            gsap.to(centerEl, { y: -10, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1 })
+          );
+        }
+        if (shineEl) {
+          loops.push(
+            gsap.to(shineEl, {
+              xPercent: 180,
+              opacity: 1,
+              duration: 1.6,
+              ease: "power2.inOut",
+              repeat: -1,
+              repeatDelay: 2.4,
+              onRepeat: () => gsap.set(shineEl, { xPercent: -180, opacity: 0 }),
+            })
+          );
+        }
+      };
+      const stopLoops = () => {
+        loops.forEach((t) => t.kill());
+        loops.length = 0;
+        if (logoEl) gsap.set(logoEl, { y: 0 });
+        if (centerEl) gsap.set(centerEl, { y: 0 });
+        if (shineEl) gsap.set(shineEl, { xPercent: -180, opacity: 0 });
       };
 
+      // ---- master scrubbed timeline ----
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -128,14 +183,41 @@ export default function Services() {
           scrub: 2,
           pin: true,
           anticipatePin: 1,
-          onEnter: revealCenter,
-          onEnterBack: revealCenter,
+          onLeave: stopLoops,
+          onLeaveBack: () => {
+            stopLoops();
+            resetCenter();
+          },
         },
       });
 
+      // Entrance baked into the scrubbed timeline (0 → 0.35) so it stays in sync
+      if (centerEl)
+        tl.to(
+          centerEl,
+          { autoAlpha: 1, scale: 1, rotate: 0, duration: 0.35, ease: "back.out(1.5)" },
+          0
+        );
+      if (glowEl)
+        tl.to(glowEl, { opacity: 0.75, scale: 1, duration: 0.35, ease: "power2.out" }, 0);
+      if (logoEl)
+        tl.to(
+          logoEl,
+          {
+            opacity: 1,
+            scale: 1,
+            rotate: 0,
+            filter: "drop-shadow(0 0 22px rgba(34,211,238,0.4)) blur(0px)",
+            duration: 0.35,
+            ease: "back.out(1.4)",
+          },
+          0.05
+        );
+      // Fire loops once entrance settles; kill if user scrubs back past it
+      tl.call(startLoops, [], 0.35);
+      tl.call(stopLoops, [], 0.34);
 
-
-      // transition between steps
+      // ---- transitions between service pairs ----
       for (let i = 0; i < stepEls.length - 1; i++) {
         const curr = stepEls[i];
         const next = stepEls[i + 1];
@@ -144,7 +226,7 @@ export default function Services() {
         const nextL = next.querySelector<HTMLElement>("[data-side='left']");
         const nextR = next.querySelector<HTMLElement>("[data-side='right']");
 
-        const at = i + 0.35; // hold, then swap
+        const at = i + 0.35;
         tl.to(currL, { x: -140, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.in" }, at)
           .to(currR, { x: 140, autoAlpha: 0, filter: "blur(8px)", duration: 0.5, ease: "power2.in" }, at)
           .set(curr, { autoAlpha: 0 }, at + 0.5)
@@ -166,6 +248,7 @@ export default function Services() {
 
     return () => ctx.revert();
   }, []);
+
 
   return (
     <section id="services" ref={sectionRef} className="relative h-screen overflow-hidden">
