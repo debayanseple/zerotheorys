@@ -34,7 +34,7 @@ export default function CTA() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { icon: Mail, label: "Email", value: "hello.zerotheorys@gmail.com" },
+                { icon: Mail, label: "Email", value: "zerotheorys@gmail.com" },
                 { icon: Phone, label: "Phone", value: "+91 8001316145" },
                 { icon: MapPin, label: "Studio", value: "Anandapolly, Bapuji Nagar, Jadavpur, Near Sulekha, India" },
                 { icon: Clock, label: "Hours", value: "Mon–Sat · 09:00–19:00 IST" },
