@@ -70,6 +70,17 @@ export default function Services() {
       const stepEls = gsap.utils.toArray<HTMLElement>("[data-step]");
       const centerEl = section.querySelector<HTMLElement>("[data-center]");
 
+      // center card entrance + idle float
+      if (centerEl) {
+        gsap.set(centerEl, {
+          autoAlpha: 0,
+          scale: 0.7,
+          rotate: -6,
+          boxShadow: "0 0 0 rgba(34,211,238,0)",
+          transformOrigin: "50% 50%",
+        });
+      }
+
       // init: hide all except first
       stepEls.forEach((el, i) => {
         const leftCard = el.querySelector<HTMLElement>("[data-side='left']");
@@ -79,6 +90,36 @@ export default function Services() {
         if (rightCard) gsap.set(rightCard, { x: i === 0 ? 0 : 120, autoAlpha: i === 0 ? 1 : 0, filter: i === 0 ? "blur(0px)" : "blur(8px)" });
       });
 
+      const revealCenter = () => {
+        if (!centerEl) return;
+        centerEl.classList.add("play");
+        gsap.to(centerEl, {
+          autoAlpha: 1,
+          scale: 1,
+          rotate: 0,
+          duration: 1.1,
+          ease: "back.out(1.5)",
+          overwrite: "auto",
+        });
+        // idle float + tilt loop
+        gsap.to(centerEl, {
+          y: -10,
+          duration: 3.2,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: 1,
+        });
+        gsap.to(centerEl, {
+          rotate: 1.5,
+          duration: 5,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          delay: 1,
+        });
+      };
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -87,10 +128,11 @@ export default function Services() {
           scrub: 2,
           pin: true,
           anticipatePin: 1,
-          onEnter: () => centerEl?.classList.add("play"),
-          onEnterBack: () => centerEl?.classList.add("play"),
+          onEnter: revealCenter,
+          onEnterBack: revealCenter,
         },
       });
+
 
 
       // transition between steps
