@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Headphones,
 } from "lucide-react";
+import LogoReveal from "./LogoReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,17 +87,11 @@ export default function Services() {
           scrub: 2,
           pin: true,
           anticipatePin: 1,
+          onEnter: () => centerEl?.classList.add("play"),
+          onEnterBack: () => centerEl?.classList.add("play"),
         },
       });
 
-      // subtle center pulse across the whole pin
-      if (centerEl) {
-        tl.to(
-          centerEl,
-          { scale: 1.06, rotate: 3, ease: "none", duration: stepEls.length },
-          0
-        );
-      }
 
       // transition between steps
       for (let i = 0; i < stepEls.length - 1; i++) {
@@ -137,23 +132,15 @@ export default function Services() {
         Our Services
       </div>
 
-      {/* center visual */}
+      {/* center visual — animated logo reveal */}
       <div
         data-center
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[240px] sm:size-[280px] md:size-[340px] rounded-3xl glass flex items-center justify-center will-change-transform"
       >
-        <div className="text-center px-6">
-          <div className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-gradient">
-            Zero
-          </div>
-          <div className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight">
-            Theorys
-          </div>
-          <div className="mt-3 md:mt-4 text-[10px] tracking-[0.35em] uppercase text-muted-foreground">
-            Different disciplines · One standard of craft
-          </div>
-        </div>
+        <LogoReveal />
       </div>
+
+
 
       {/* steps overlay */}
       <div className="absolute inset-0">
