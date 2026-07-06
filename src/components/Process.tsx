@@ -94,7 +94,7 @@ export default function Process() {
               <div
                 key={p.n}
                 data-phase-card
-                className={`shrink-0 w-[78vw] sm:w-[480px] md:w-[540px] h-[52vh] max-h-[440px] rounded-[2rem] p-6 md:p-10 flex flex-col justify-between glass transition-all duration-500 ease-out ${
+                className={`shrink-0 w-[68vw] sm:w-[400px] md:w-[460px] h-[44vh] max-h-[360px] rounded-[2rem] p-6 md:p-10 flex flex-col justify-between glass transition-all duration-500 ease-out ${
                   isActive
                     ? "opacity-100 scale-100 border-foreground/30 shadow-2xl"
                     : "opacity-40 scale-[0.92]"
