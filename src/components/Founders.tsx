@@ -3,7 +3,7 @@ import { useRef, useState, type MouseEvent } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import debayanAsset from "@/assets/debayan.png.asset.json";
 import debayanVideoAsset from "@/assets/debayan.mp4.asset.json";
-import ganeshAsset from "@/assets/ganesh.png.asset.json";
+import mohitPaulAsset from "@/assets/Mohit Paul.jpeg";
 import aniketAsset from "@/assets/aniket.png.asset.json";
 
 type Founder = {
@@ -23,10 +23,10 @@ const founders: Founder[] = [
     initials: "DC",
   },
   {
-    name: "Ganesh Singha",
+    name: "Mohit Paul",
     role: "Full-Stack Engineer",
-    image: ganeshAsset.url,
-    initials: "GS",
+    image: mohitPaulAsset,
+    initials: "MP",
   },
   {
     name: "Aniket Karmakar",
