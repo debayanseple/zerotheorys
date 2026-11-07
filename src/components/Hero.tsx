@@ -33,6 +33,9 @@ export default function Hero() {
               <span className="size-1.5 rounded-full bg-neon-blue animate-pulse" />
               AI · Engineering · Growth · 24/7 Ops
             </span>
+            <p className="mt-4 flex items-center gap-2 text-sm font-medium text-festival-gold">
+              <span aria-hidden="true">✦</span> Happy Diwali <span aria-hidden="true">✦</span>
+            </p>
 
             <h1
               className="mt-5 font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05]"

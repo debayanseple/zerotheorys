@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep the homepage festival effects in a browser-only canvas component mounted by the index route; use CSS festival tokens and respect reduced motion so decoration stays independent of content and navigation.
