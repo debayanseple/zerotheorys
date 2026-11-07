@@ -32,9 +32,9 @@ export default function Navbar() {
   return (
     <motion.nav
       initial={{ y: -40, opacity: 0 }}
-      animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0 : 1 }}
+      animate={{ y: hidden ? -180 : 0, opacity: hidden ? 0 : 1 }}
       transition={{ duration: 0.35, ease: "easeInOut" }}
-      className="fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[min(92vw,1100px)]"
+      className="fixed top-[76px] sm:top-[90px] left-1/2 z-50 -translate-x-1/2 w-[min(92vw,1100px)]"
     >
       <div className="glass rounded-full px-6 py-3 flex items-center justify-between relative">
         <a href="#" className="flex items-center gap-2 font-display font-semibold tracking-tight">
