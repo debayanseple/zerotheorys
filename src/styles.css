@@ -32,12 +32,19 @@
   --color-neon-blue: var(--neon-blue);
   --color-neon-purple: var(--neon-purple);
   --color-neon-pink: var(--neon-pink);
+  --color-festival-gold: var(--festival-gold);
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
 }
 
 :root {
   --radius: 1rem;
+  --festival-gold: oklch(0.85 0.16 85);
+  --festival-rose: oklch(0.76 0.2 10);
+  --festival-jade: oklch(0.83 0.15 165);
+  --festival-clay: oklch(0.55 0.16 40);
+  --festival-flame: linear-gradient(to top, var(--festival-gold), var(--foreground));
+  --festival-glow: 0 0 18px color-mix(in oklab, var(--festival-gold) 55%, transparent);
   /* Obsidian dark base */
   --background: oklch(0.13 0.02 270);
   --foreground: oklch(0.98 0.005 270);
@@ -130,4 +137,32 @@
   background-image:
     radial-gradient(circle at 1px 1px, oklch(1 0 0 / 0.04) 1px, transparent 0);
   background-size: 32px 32px;
+}
+
+.diwali-diya {
+  width: 46px;
+  height: 18px;
+  border-radius: 4px 4px 28px 28px;
+  background: var(--festival-clay);
+  border-top: 3px solid var(--festival-gold);
+  box-shadow: var(--festival-glow);
+}
+.diwali-diya span {
+  position: absolute;
+  bottom: 20px;
+  left: 17px;
+  width: 12px;
+  height: 25px;
+  border-radius: 80% 10% 70% 40%;
+  background: var(--festival-flame);
+  box-shadow: var(--festival-glow);
+  transform: rotate(-12deg);
+  transform-origin: bottom center;
+  animation: diya-flicker 2.4s ease-in-out infinite alternate;
+}
+@keyframes diya-flicker {
+  to { transform: rotate(5deg) scaleY(0.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .diwali-diya span { animation: none; }
 }

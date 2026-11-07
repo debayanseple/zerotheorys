@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -36,7 +37,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -79,18 +80,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
+      { title: "Zero Theorys — AI, Engineering & Growth" },
       { name: "description", content: "An interactive 3D website showcasing Zero Theorys' digital agency services with a modern, minimalist aesthetic." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
+      { property: "og:title", content: "Zero Theorys — AI, Engineering & Growth" },
       { property: "og:description", content: "An interactive 3D website showcasing Zero Theorys' digital agency services with a modern, minimalist aesthetic." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
+      { name: "twitter:title", content: "Zero Theorys — AI, Engineering & Growth" },
       { name: "twitter:description", content: "An interactive 3D website showcasing Zero Theorys' digital agency services with a modern, minimalist aesthetic." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e4519d6a-101c-4066-9b52-d3fe337db49f/id-preview-17ed3bde--7438bd3c-d016-421a-aa0d-4f59acbf6cb9.lovable.app-1782832257458.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e4519d6a-101c-4066-9b52-d3fe337db49f/id-preview-17ed3bde--7438bd3c-d016-421a-aa0d-4f59acbf6cb9.lovable.app-1782832257458.png" },
       { name: "google-site-verification", content: "8P3S7cmKTWo7WYm5vPuAwXLWw-hGKMkMs1rVvqGzbUs" },
     ],
     links: [

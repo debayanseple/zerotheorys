@@ -11,6 +11,7 @@ import CTA from "@/components/CTA";
 import Founders from "@/components/Founders";
 import HangingPendant from "@/components/HangingPendant";
 import ScrollFX from "@/components/ScrollFX";
+import DiwaliFireworks from "@/components/DiwaliFireworks";
 
 
 export const Route = createFileRoute("/")({
@@ -20,6 +21,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Zero Theorys integrates AI, software engineering, performance marketing and 24/7 operations into a single accountable team for ambitious companies." },
       { property: "og:title", content: "Zero Theorys — One accountable partner" },
       { property: "og:description", content: "AI, software, websites, marketing and BPO — delivered by one senior team." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
@@ -29,6 +32,7 @@ function Index() {
   return (
     <main className="relative">
       <ScrollFX />
+      <DiwaliFireworks />
       <Navbar />
       <HangingPendant />
 
