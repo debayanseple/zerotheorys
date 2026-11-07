@@ -42,6 +42,8 @@
   --festival-gold: oklch(0.85 0.16 85);
   --festival-rose: oklch(0.76 0.2 10);
   --festival-jade: oklch(0.83 0.15 165);
+  --festival-pearl: oklch(0.97 0.025 90);
+  --festival-wire: oklch(0.62 0.065 85 / 0.65);
   --festival-clay: oklch(0.55 0.16 40);
   --festival-flame: linear-gradient(to top, var(--festival-gold), var(--foreground));
   --festival-glow: 0 0 18px color-mix(in oklab, var(--festival-gold) 55%, transparent);
@@ -163,6 +165,7 @@
 @keyframes diya-flicker {
   to { transform: rotate(5deg) scaleY(0.9); }
 }
+.festival-paused span { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   .diwali-diya span { animation: none; }
 }
