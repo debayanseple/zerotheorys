@@ -7,12 +7,15 @@ type Ripple = { x: number; y: number; life: number; color: string };
 
 export default function DiwaliFireworks() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const lightsRef = useRef<HTMLCanvasElement>(null);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
-    if (!canvas || !context) return;
+    const lights = lightsRef.current;
+    const lightsContext = lights?.getContext("2d");
+    if (!canvas || !context || !lights || !lightsContext) return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const styles = getComputedStyle(document.documentElement);
     const colors = ["--festival-gold", "--festival-rose", "--festival-jade", "--festival-pearl"].map((token) => styles.getPropertyValue(token).trim());
@@ -30,6 +33,9 @@ export default function DiwaliFireworks() {
       canvas.width = width * ratio;
       canvas.height = height * ratio;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      lights.width = width * ratio;
+      lights.height = 90 * ratio;
+      lightsContext.setTransform(ratio, 0, 0, ratio, 0, 0);
     };
     const addSpark = (x: number, y: number, vx: number, vy: number, duration: number, color: string, size = 1.4) => {
       if (sparks.length >= 650) return;
@@ -64,6 +70,8 @@ export default function DiwaliFireworks() {
     };
     const leave = () => { pointer.active = false; };
     const drawLights = () => {
+      const context = lightsContext;
+      context.clearRect(0, 0, width, 90);
       const spans = width < 640 ? 2 : 4;
       const span = width / spans;
       for (let section = 0; section < spans; section++) {
@@ -189,6 +197,7 @@ export default function DiwaliFireworks() {
   return (
     <>
       <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none fixed inset-0 z-20 h-full w-full" />
+      <canvas ref={lightsRef} aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[90px] w-full" />
       <div aria-hidden="true" className={`diwali-diya pointer-events-none fixed bottom-4 left-5 z-20 ${paused ? "festival-paused" : ""}`}><span /></div>
       <Button variant="outline" size="icon" className="fixed bottom-5 right-5 z-40 border-festival-gold/40 bg-background/90 text-festival-gold" onClick={() => setPaused((value) => !value)} aria-label={paused ? "Play Diwali fireworks" : "Pause Diwali fireworks"} title={paused ? "Play Diwali fireworks" : "Pause Diwali fireworks"}>
         {paused ? <Play /> : <Pause />}
